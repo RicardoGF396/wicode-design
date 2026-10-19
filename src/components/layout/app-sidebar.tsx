@@ -1,6 +1,8 @@
 import { Link, useLocation } from "react-router-dom"
 import {
   Bell,
+  BookOpen,
+  Cable,
   Check,
   ChevronRight,
   FileText,
@@ -61,6 +63,11 @@ const mainNav = [
   { title: "Pedidos", url: "/table", icon: ShoppingBag },
   { title: "Clientes", url: "/drawer-detail", icon: Users },
   { title: "Formularios", url: "/forms", icon: FileText },
+]
+
+const resourcesNav = [
+  { title: "Guía MCP", url: "/mcp-guide", icon: Cable },
+  { title: "Documentación", url: "/docs", icon: BookOpen },
 ]
 
 const salesChannels = [
@@ -151,6 +158,27 @@ export function AppSidebar() {
                   </CollapsibleContent>
                 </SidebarMenuItem>
               </Collapsible>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        {/* Recursos del design system: guía MCP y documentación */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Recursos</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {resourcesNav.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    isActive={location.pathname === item.url}
+                    tooltip={item.title}
+                    render={<Link to={item.url} />}
+                    className="rounded-lg text-sidebar-foreground/80 data-active:text-sidebar-accent-foreground"
+                  >
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

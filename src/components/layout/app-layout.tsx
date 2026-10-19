@@ -1,6 +1,14 @@
 import { useState } from "react"
 import { Outlet, useLocation } from "react-router-dom"
-import { FileText, Home, ShoppingBag, Users, type LucideIcon } from "lucide-react"
+import {
+  BookOpen,
+  Cable,
+  FileText,
+  Home,
+  ShoppingBag,
+  Users,
+  type LucideIcon,
+} from "lucide-react"
 
 import { AppSidebar } from "@/components/layout/app-sidebar"
 import { PageActionsProvider } from "@/components/layout/page-actions"
@@ -11,6 +19,8 @@ const pages: Record<string, { title: string; icon: LucideIcon }> = {
   "/table": { title: "Pedidos", icon: ShoppingBag },
   "/drawer-detail": { title: "Clientes", icon: Users },
   "/forms": { title: "Formularios", icon: FileText },
+  "/mcp-guide": { title: "Guía MCP", icon: Cable },
+  "/docs": { title: "Documentación", icon: BookOpen },
 }
 
 export function AppLayout() {

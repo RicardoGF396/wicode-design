@@ -139,3 +139,27 @@ por sección → columna lateral (1/3) con organización.
 - [ ] Datos tipados en `src/lib/` (mock) o capa de API real.
 - [ ] Estados vacío, carga y error resueltos (`Empty`, `Skeleton`, `toast`).
 - [ ] Probada en light y dark, y en ancho móvil.
+
+## 7. Guía MCP — `src/pages/mcp-guide.tsx`
+
+**Receta (página de detalle):** columna única centrada con
+`max-w-[600px]` → banner informativo descartable (icono en círculo
+`bg-info/15`, texto con link y X) → card de configuración con secciones
+colapsables (`Collapsible` con header `bg-muted/50` + chevron rotatorio;
+radio + checkboxes dentro) y `CardFooter` gris con link → card "Código" con
+`Select` en el header para cambiar snippet y `CodeBlock variant="editor"`
+(números de línea).
+
+- Acciones: solo secundarias (Probar, Más acciones ▾, link a docs).
+
+**Recicla para:** detalle de una integración, configuración de un conector,
+onboarding técnico.
+
+## 8. Documentación — `src/pages/docs-page.tsx`
+
+**Receta:** `PageActions` (Descargar todo) → `Tabs` con un documento por
+pestaña → card de altura completa con header (título + archivo + botones
+Copiar y Descargar) y cuerpo `pre` scrolleable. El contenido se importa con
+`?raw` desde `/docs`, así siempre refleja la fuente de verdad.
+
+**Recicla para:** visores de changelog, políticas o cualquier markdown.

@@ -3,9 +3,11 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { AppLayout } from "@/components/layout/app-layout"
 import { Toaster } from "@/components/ui/sonner"
 import { DashboardPage } from "@/pages/dashboard"
+import { DocsPage } from "@/pages/docs-page"
 import { DrawerDetailPage } from "@/pages/drawer-detail"
 import { FormsPage } from "@/pages/forms"
 import { LoginPage } from "@/pages/login"
+import { McpGuidePage } from "@/pages/mcp-guide"
 import { SignupPage } from "@/pages/signup"
 import { TablePage } from "@/pages/table-page"
 
@@ -23,6 +25,8 @@ export function App() {
           <Route path="/table" element={<TablePage />} />
           <Route path="/drawer-detail" element={<DrawerDetailPage />} />
           <Route path="/forms" element={<FormsPage />} />
+          <Route path="/mcp-guide" element={<McpGuidePage />} />
+          <Route path="/docs" element={<DocsPage />} />
         </Route>
       </Routes>
       <Toaster position="bottom-right" />

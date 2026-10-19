@@ -24,6 +24,11 @@ Otros scripts: `npm run build`, `npm run typecheck`, `npm run lint`,
 | `/table` | Tabla CRUD: filtros, selección, paginación, acciones |
 | `/drawer-detail` | Listado + detalle en drawer lateral (Sheet) |
 | `/forms` | Formulario de una página por secciones (RHF + zod) |
+| `/mcp-guide` | Tutorial para consumir el sistema como MCP |
+| `/docs` | Documentación para copiar o descargar |
+
+Demo desplegada: https://wicode-design.vercel.app ·
+Repositorio: https://github.com/RicardoGF396/wicode-design
 
 El tema por defecto es light; se cambia desde Configuración, en el footer del
 sidebar (Claro / Oscuro / Sistema).
@@ -63,6 +68,22 @@ src/
 ├── hooks/
 └── index.css        # TODOS los tokens de diseño
 ```
+
+## Uso como MCP (para agentes)
+
+El proyecto expone su documentación para que otros agentes basen sus
+propuestas de clientes en este sistema:
+
+- **Servidor MCP (stdio)** en [mcp/server.mjs](mcp/server.mjs), con las
+  herramientas `list_docs`, `get_doc` y `get_design_system`:
+  ```bash
+  claude mcp add wicode-design -- node $(pwd)/mcp/server.mjs
+  ```
+- **Por URL** (sin MCP): el deploy sirve las docs como markdown crudo —
+  índice para agentes en `https://wicode-design.vercel.app/llms.txt` y
+  documentos en `/docs/*.md` (el script `sync-docs` las copia a `public/docs`
+  en cada build).
+- Tutorial completo en la página **/mcp-guide** de la app.
 
 ## Cómo iniciar un proyecto nuevo desde esta base
 

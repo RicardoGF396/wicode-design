@@ -1,0 +1,31 @@
+# Wicode Design System
+
+> Design system base de Wicode: React + Vite + Tailwind CSS v4 + shadcn/ui
+> (sobre Base UI). Es la fuente de verdad para construir propuestas de UI
+> para clientes: tokens, reglas, componentes y páginas receta.
+
+Antes de proponer o generar cualquier pantalla, lee las reglas y parte de una
+receta. Nunca diseñes desde cero ni uses colores/pesos fuera de los tokens.
+
+## Documentación
+
+- [Reglas de diseño](https://wicode-design.vercel.app/docs/DESIGN_RULES.md): layout, escala 90%, tipografía (peso máximo 500), color semántico, tablas, formularios y anti-patrones.
+- [Tokens](https://wicode-design.vercel.app/docs/TOKENS.md): colores, tipografía Inter/Inter Display, radios, tablas, badges y cómo cambiar el branding.
+- [Componentes](https://wicode-design.vercel.app/docs/COMPONENTS.md): capas, patrones de shadcn sobre Base UI (prop `render`, grupos) y personalizaciones aprobadas.
+- [Páginas receta](https://wicode-design.vercel.app/docs/PAGES.md): login, signup, dashboard Analytics, tabla Orders, drawer detail y formularios de una página.
+- [Instrucciones para agentes](https://wicode-design.vercel.app/docs/CLAUDE.md): resumen operativo para generar UI sobre esta base.
+
+## Demo navegable
+
+- [Dashboard Analytics](https://wicode-design.vercel.app/)
+- [Tabla de pedidos](https://wicode-design.vercel.app/table)
+- [Clientes con drawer de detalle](https://wicode-design.vercel.app/drawer-detail)
+- [Formulario de una página](https://wicode-design.vercel.app/forms)
+- [Login](https://wicode-design.vercel.app/login) · [Sign up](https://wicode-design.vercel.app/signup)
+
+## MCP
+
+El repositorio (https://github.com/RicardoGF396/wicode-design) incluye un
+servidor MCP (stdio) en `mcp/server.mjs` con las herramientas `list_docs`,
+`get_doc` y `get_design_system`. Guía de conexión:
+https://wicode-design.vercel.app/mcp-guide

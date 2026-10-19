@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Docs sincronizadas al build (fuente: /docs y CLAUDE.md)
+public/docs/
