@@ -87,6 +87,9 @@ Excepciones vigentes a "no editar `ui/`", decididas para este sistema:
 
 - `button.tsx`: la variante `outline` usa `bg-card` (blanca) en lugar de
   `bg-background`, para contrastar con el fondo gris de página.
+- `tabs.tsx`: `TabsList` usa `bg-foreground/8` y el tab activo `bg-card` con
+  `shadow-sm` (en lugar de `bg-muted` / `bg-background`), para que el control
+  no se pierda sobre el fondo gris de página.
 
 - `table.tsx`: densidad compacta por defecto — `TableHead` usa `h-9` y
   `font-normal`, `TableCell` usa `px-3 py-1` (en lugar de `h-10` /
