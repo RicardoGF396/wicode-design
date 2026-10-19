@@ -1,20 +1,32 @@
-import { Button } from "@/components/ui/button"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+
+import { AppLayout } from "@/components/layout/app-layout"
+import { Toaster } from "@/components/ui/sonner"
+import { DashboardPage } from "@/pages/dashboard"
+import { DrawerDetailPage } from "@/pages/drawer-detail"
+import { FormsPage } from "@/pages/forms"
+import { LoginPage } from "@/pages/login"
+import { SignupPage } from "@/pages/signup"
+import { TablePage } from "@/pages/table-page"
 
 export function App() {
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {/* Páginas de autenticación: sin layout de aplicación */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+
+        {/* Páginas internas: comparten el layout con sidebar */}
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/table" element={<TablePage />} />
+          <Route path="/drawer-detail" element={<DrawerDetailPage />} />
+          <Route path="/forms" element={<FormsPage />} />
+        </Route>
+      </Routes>
+      <Toaster position="bottom-right" />
+    </BrowserRouter>
   )
 }
 

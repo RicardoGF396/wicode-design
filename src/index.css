@@ -1,13 +1,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+@import "inter-ui/inter-latin.css";
+@import "inter-ui/inter-display-latin.css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
+    /* Tipografía: Inter (estática) para texto, Inter Display para títulos */
+    --font-heading: 'InterDisplay', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -21,6 +23,17 @@
     --color-chart-3: var(--chart-3);
     --color-chart-2: var(--chart-2);
     --color-chart-1: var(--chart-1);
+    --color-success: var(--success);
+    --color-success-foreground: var(--success-foreground);
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
+    --color-info: var(--info);
+    --color-info-foreground: var(--info-foreground);
+    --color-table-foreground: var(--table-foreground);
+    --color-table-header: var(--table-header);
+    --color-badge-neutral: var(--badge-neutral);
+    --color-badge-caution: var(--badge-caution);
+    --color-badge-attention: var(--badge-attention);
     --color-ring: var(--ring);
     --color-input: var(--input);
     --color-border: var(--border);
@@ -49,7 +62,8 @@
 }
 
 :root {
-    --background: oklch(1 0 0);
+    /* Fondo de página gris para dar contraste a las superficies blancas */
+    --background: #f1f1f1;
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
@@ -64,23 +78,39 @@
     --accent: oklch(0.97 0 0);
     --accent-foreground: oklch(0.205 0 0);
     --destructive: oklch(0.577 0.245 27.325);
+    --success: oklch(0.527 0.154 150.069);
+    --success-foreground: oklch(0.985 0 0);
+    --warning: oklch(0.769 0.188 70.08);
+    --warning-foreground: oklch(0.205 0 0);
+    --info: oklch(0.546 0.245 262.881);
+    --info-foreground: oklch(0.985 0 0);
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
     --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
+    --chart-1: oklch(0.527 0.154 150.069);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    /* Texto de tablas: mas suave que el foreground general */
+    --table-foreground: #4b4b4b;
+    /* Fondo del encabezado de tablas */
+    --table-header: #f7f7f7;
+    /* Pastillas de estado (patron Orders): gris para estados resueltos,
+       naranja para atencion de pago, amarillo para preparacion pendiente */
+    --badge-neutral: #e3e3e3;
+    --badge-caution: #ffd6a4;
+    --badge-attention: #ffeb78;
+    /* Sidebar oscuro sobre contenido claro (patron del layout base) */
+    --sidebar: oklch(0.17 0 0);
+    --sidebar-foreground: oklch(0.87 0 0);
+    --sidebar-primary: oklch(0.985 0 0);
+    --sidebar-primary-foreground: oklch(0.205 0 0);
+    --sidebar-accent: oklch(0.26 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 8%);
+    --sidebar-ring: oklch(0.556 0 0);
 }
 
 .dark {
@@ -99,22 +129,106 @@
     --accent: oklch(0.269 0 0);
     --accent-foreground: oklch(0.985 0 0);
     --destructive: oklch(0.704 0.191 22.216);
+    --success: oklch(0.696 0.17 162.48);
+    --success-foreground: oklch(0.145 0 0);
+    --warning: oklch(0.769 0.188 70.08);
+    --warning-foreground: oklch(0.145 0 0);
+    --info: oklch(0.623 0.214 259.815);
+    --info-foreground: oklch(0.985 0 0);
     --border: oklch(1 0 0 / 10%);
     --input: oklch(1 0 0 / 15%);
     --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
+    --chart-1: oklch(0.696 0.17 162.48);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.769 0.188 70.08);
+    --chart-4: oklch(0.627 0.265 303.9);
+    --chart-5: oklch(0.645 0.246 16.439);
+    --table-foreground: oklch(0.85 0 0);
+    --table-header: oklch(0.24 0 0);
+    --badge-neutral: oklch(0.32 0 0);
+    --badge-caution: oklch(0.4 0.08 65);
+    --badge-attention: oklch(0.42 0.09 100);
+    --sidebar: oklch(0.17 0 0);
+    --sidebar-foreground: oklch(0.87 0 0);
+    --sidebar-primary: oklch(0.985 0 0);
+    --sidebar-primary-foreground: oklch(0.205 0 0);
+    --sidebar-accent: oklch(0.26 0 0);
     --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-border: oklch(1 0 0 / 8%);
     --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer components {
+  /* Tabla estándar (patrón Orders): filas blancas con divisores finos, sin
+     texto en --table-foreground. Se aplica con
+     <Table className="data-table">. */
+  .data-table {
+    color: var(--table-foreground);
+  }
+  /* Encabezado con fondo propio y bordes superior e inferior (el inferior
+     va como sombra en el th para que acompañe al encabezado sticky) */
+  .data-table thead th {
+    background: var(--table-header);
+    border-top: 1px solid var(--border);
+    box-shadow: inset 0 -1px 0 var(--border);
+  }
+  /* Fila cancelada/archivada: texto tachado, badges intactos */
+  .data-table tr[data-cancelled] td:not(:has([data-slot="badge"])) {
+    text-decoration: line-through;
+  }
+
+  /* Encabezado fijo: el contenedor scrollea y el thead queda pegado arriba.
+     La card que lo envuelve define la altura (flex-1 min-h-0), de modo que
+     la paginación bajo la card siempre queda visible.
+     Se combina: <Table className="data-table table-sticky-header"> */
+  [data-slot="table-container"]:has(.table-sticky-header) {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .table-sticky-header thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--table-header, var(--card));
+    box-shadow: inset 0 -1px 0 var(--border);
+  }
+
+  /* Primera columna fija (selección + identificador) para scroll horizontal */
+  .table-sticky-col th:first-child,
+  .table-sticky-col td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    width: 2.75rem;
+    min-width: 2.75rem;
+    background: var(--card);
+  }
+  .table-sticky-col th:nth-child(2),
+  .table-sticky-col td:nth-child(2) {
+    position: sticky;
+    left: 2.75rem;
+    z-index: 1;
+    background: var(--card);
+    box-shadow: 6px 0 6px -6px oklch(0 0 0 / 0.2);
+  }
+  .table-sticky-col thead th:first-child,
+  .table-sticky-col thead th:nth-child(2) {
+    background: var(--table-header, var(--card));
+  }
+  /* Las celdas sticky del encabezado conservan la línea inferior */
+  .data-table.table-sticky-col thead th:first-child {
+    box-shadow: inset 0 -1px 0 var(--border);
+  }
+  .data-table.table-sticky-col thead th:nth-child(2) {
+    box-shadow:
+      inset 0 -1px 0 var(--border),
+      6px 0 6px -6px oklch(0 0 0 / 0.2);
+  }
+  .table-sticky-col thead th:first-child,
+  .table-sticky-col thead th:nth-child(2) {
+    z-index: 3;
+  }
 }
 
 @layer base {
@@ -126,5 +240,31 @@
     }
   html {
     @apply font-sans;
+    /* Escala global del sistema: equivale a la vista al 90% del navegador.
+       Todo lo definido en rem (texto, espaciado, iconos) escala junto. */
+    font-size: 90%;
+    }
+  /* Cursor pointer en todo elemento interactivo habilitado */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="menuitem"],
+  [role="menuitemcheckbox"],
+  [role="menuitemradio"],
+  [role="option"],
+  [role="tab"],
+  [role="checkbox"]:not([aria-disabled="true"]),
+  [role="radio"]:not([aria-disabled="true"]),
+  [role="switch"]:not([aria-disabled="true"]),
+  [role="combobox"],
+  label[for],
+  a {
+    cursor: pointer;
+    }
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+    }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
     }
 }
