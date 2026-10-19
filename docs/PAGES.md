@@ -33,20 +33,28 @@ Misma receta que login con más campos. Lo único nuevo:
 
 ## 3. Dashboard — `src/pages/dashboard.tsx`
 
-**Receta:** saludo en contenido → franja de métricas → grid principal
-2/3 + 1/3 → grid de tarjetas de acción.
+**Receta (patrón Analytics):** `PageActions` solo con secundarios (sin acción
+primaria) → fila de filtros de periodo → fila de 4 KPIs → grid 2/3 + 1/3
+(gráfica principal + desglose) → grid de 3 (dona por canal, serie secundaria,
+barras por producto).
 
-- Métricas: `MetricCard` (`src/components/dashboard/metric-card.tsx`) en
-  `grid gap-4 sm:grid-cols-2 lg:grid-cols-4`. Variación con `text-success` /
-  `text-destructive` + icono de tendencia.
-- Gráfica: `ChartContainer` con `ChartConfig` apuntando a `--chart-n`,
-  `AreaChart` de recharts con gradiente del color de la serie.
-- Lateral: card de lista/checklist con `CardFooter` de acción.
-- Tarjetas de acción (patrón onboarding): icono en cuadro `bg-muted`,
-  `CardTitle text-base`, `CardDescription`, CTA `outline` con flecha.
+- Filtros de periodo: `Select` de presets (Hoy/7/30/90 días/Personalizado) +
+  `Popover` con `Tabs` Rango/Día y `Calendar` (`mode="range"` con
+  `numberOfMonths={2}`, o `mode="single"`), formato con `date-fns` y locale
+  `es` + botón de moneda.
+- KPI: card horizontal con label de subrayado punteado, valor
+  `text-lg font-semibold tabular-nums` + guion de tendencia y `Sparkline`.
+- Series temporales: `LineChart` con DOS series — periodo actual
+  (`--chart-2`) y periodo anterior (mismo color al 35% vía `color-mix`) — y
+  leyenda de periodos con puntos de color.
+- Desglose: lista de filas alternadas (`bg-muted/50` en pares), label en
+  `text-info` y valor tabular.
+- Dona: `PieChart` con `innerRadius`, total centrado con overlay absoluto y
+  leyenda lateral.
+- Barras por producto: divs con ancho proporcional al máximo (sin recharts),
+  valor al lado y línea comparativa del periodo anterior.
 
-**Recicla para:** home de cualquier admin, página de analytics, resumen de
-entidad.
+**Recicla para:** analytics, reportes, resumen ejecutivo de cualquier módulo.
 
 ## 4. Table — `src/pages/table-page.tsx`
 

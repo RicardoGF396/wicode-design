@@ -52,6 +52,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 
@@ -76,8 +77,9 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
         <SidebarMenu>
-          {/* Marca + botón de colapso. En modo icono se apilan en columna. */}
-          <SidebarMenuItem className="flex items-center gap-1 group-data-[collapsible=icon]:flex-col">
+          {/* Marca + botón de colapso. Colapsado, el botón desaparece y el
+              sidebar se reabre con el rail del borde derecho. */}
+          <SidebarMenuItem className="flex items-center gap-1">
             <SidebarMenuButton
               size="lg"
               render={<Link to="/" aria-label="Wicode" />}
@@ -86,7 +88,7 @@ export function AppSidebar() {
               <WicodeLogo className="!h-5 !w-auto px-1 group-data-[collapsible=icon]:hidden" />
               <WicodeMark className="hidden !h-5 !w-auto group-data-[collapsible=icon]:block" />
             </SidebarMenuButton>
-            <SidebarTrigger className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
+            <SidebarTrigger className="text-sidebar-foreground/70 group-data-[collapsible=icon]:hidden hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
           </SidebarMenuItem>
         </SidebarMenu>
         {/* Buscador tipo pill: relleno gris, sin borde, atajo a la derecha */}
@@ -209,12 +211,12 @@ export function AppSidebar() {
                 }
               >
                 <Avatar className="size-8 rounded-md">
-                  <AvatarFallback className="rounded-md">AH</AvatarFallback>
+                  <AvatarFallback className="rounded-md">RG</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Aldama Home</span>
+                  <span className="truncate font-semibold">Ricardo González</span>
                   <span className="truncate text-xs text-sidebar-foreground/60">
-                    admin@aldama.mx
+                    ricardo.gonzalez@wicode.com.mx
                   </span>
                 </div>
               </DropdownMenuTrigger>
@@ -241,6 +243,9 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+      {/* Franja clicable en el borde: cursor de redimensionar y clic para
+          abrir/cerrar el sidebar */}
+      <SidebarRail />
     </Sidebar>
   )
 }

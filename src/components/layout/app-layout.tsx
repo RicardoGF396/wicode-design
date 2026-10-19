@@ -27,9 +27,10 @@ export function AppLayout() {
       <SidebarInset className="h-svh overflow-hidden md:h-[calc(100svh-1rem)]">
         {/* Header estándar: compacto, sin borde inferior. Icono + título a la
             izquierda; acciones principales de la página a la derecha. */}
-        <header className="flex h-14 shrink-0 items-center gap-2 px-4">
-          <PageIcon className="size-4 text-muted-foreground" />
-          <span className="text-sm font-medium">{page.title}</span>
+        {/* px-6 alinea icono, título y acciones con el p-6 del contenido */}
+        <header className="flex h-14 shrink-0 items-center gap-2.5 px-6">
+          <PageIcon className="size-5 text-muted-foreground" />
+          <span className="text-base font-medium">{page.title}</span>
           {/* Solo acciones de página: notificaciones y tema viven en el sidebar */}
           <div ref={setActionsSlot} className="ml-auto flex items-center gap-2" />
         </header>

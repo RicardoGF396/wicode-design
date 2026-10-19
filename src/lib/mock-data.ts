@@ -60,17 +60,59 @@ export const fulfillmentLabel: Record<FulfillmentStatus, string> = {
   no_requerido: "No se requiere",
 }
 
-export type Metric = {
-  label: string
-  value: string
-  change: number
-}
+// ── Analytics (dashboard) ────────────────────────────────────────────────
 
-export const metrics: Metric[] = [
-  { label: "Visitas", value: "12,480", change: 12.4 },
-  { label: "Ventas totales", value: "$48,920", change: 8.1 },
-  { label: "Pedidos", value: "1,024", change: -2.3 },
-  { label: "Tasa de conversión", value: "3.2%", change: 0.6 },
+export const analyticsKpis = [
+  { label: "Ventas brutas", value: "$1,009.40", spark: [0, 0, 0, 0, 0, 0, 2, 9, 1, 0] },
+  { label: "Tasa de clientes recurrentes", value: "66.66%", spark: [0, 0, 0, 0, 0, 0, 1, 7, 2, 0] },
+  { label: "Pedidos preparados", value: "4", spark: [0, 0, 0, 0, 0, 0, 1, 4, 1, 0] },
+  { label: "Pedidos", value: "5", spark: [0, 0, 0, 0, 0, 0, 2, 5, 1, 0] },
+]
+
+// Dos series: periodo actual y periodo anterior (comparativo)
+export const salesOverTime = [
+  { date: "12 jun", actual: 0, anterior: 0 },
+  { date: "15 jun", actual: 0, anterior: 12 },
+  { date: "18 jun", actual: 0, anterior: 0 },
+  { date: "21 jun", actual: 0, anterior: 25 },
+  { date: "24 jun", actual: 0, anterior: 0 },
+  { date: "27 jun", actual: 0, anterior: 8 },
+  { date: "30 jun", actual: 0, anterior: 0 },
+  { date: "3 jul", actual: 95, anterior: 0 },
+  { date: "6 jul", actual: 732, anterior: 15 },
+  { date: "9 jul", actual: 0, anterior: 0 },
+]
+
+export const salesBreakdown = [
+  { label: "Ventas brutas", value: 1009.4 },
+  { label: "Descuentos", value: 0 },
+  { label: "Devoluciones", value: -182.2 },
+  { label: "Ventas netas", value: 827.2 },
+  { label: "Cargos de envío", value: 0 },
+  { label: "Cuotas de devolución", value: 0 },
+  { label: "Impuestos", value: 0 },
+  { label: "Ventas totales", value: 827.2 },
+]
+
+export const salesByChannel = [
+  { channel: "Tienda en línea", value: 620 },
+  { channel: "Punto de venta", value: 207.2 },
+]
+
+export const aovOverTime = [
+  { date: "12 jun", actual: 0, anterior: 0 },
+  { date: "19 jun", actual: 0, anterior: 48 },
+  { date: "26 jun", actual: 0, anterior: 0 },
+  { date: "3 jul", actual: 160, anterior: 22 },
+  { date: "6 jul", actual: 202, anterior: 0 },
+  { date: "10 jul", actual: 0, anterior: 0 },
+]
+
+export const salesByProduct = [
+  { name: "Pamina Comfort Edredón King", value: 700, previous: 0 },
+  { name: "Hojas de tomillo premium – Hierba mediterránea", value: 99, previous: 0 },
+  { name: "Pul Biber premium (hojuelas de chile turco)", value: 20, previous: 0 },
+  { name: "Especia de pimiento rojo – Chile molido aromático", value: 8.2, previous: 0 },
 ]
 
 // Métricas del día para el encabezado de la página de pedidos.
@@ -81,15 +123,6 @@ export const todayOrderMetrics = [
   { label: "Reversiones de ventas", value: "-$182", spark: [0, 0, -2, 0, 0, -6, -1, -3] },
   { label: "Pedidos preparados", value: "8", spark: [1, 0, 2, 1, 4, 2, 6, 8] },
   { label: "Pedidos entregados", value: "5", spark: [0, 1, 0, 2, 1, 3, 2, 5] },
-]
-
-export const salesByMonth = [
-  { month: "May", ventas: 18600, pedidos: 420 },
-  { month: "Jun", ventas: 22400, pedidos: 510 },
-  { month: "Jul", ventas: 19800, pedidos: 468 },
-  { month: "Ago", ventas: 26900, pedidos: 590 },
-  { month: "Sep", ventas: 31200, pedidos: 645 },
-  { month: "Oct", ventas: 48920, pedidos: 1024 },
 ]
 
 export const formatCurrency = (value: number) =>

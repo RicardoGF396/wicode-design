@@ -76,7 +76,8 @@ equipo antes de romperlas.
   existen en este sistema. La jerarquía se logra con tamaño y color, no con
   pesos pesados.
 - Jerarquía fija:
-  - Título de página: icono + `text-sm font-medium` (lo pone el layout)
+  - Título de página: icono `size-5` + `text-base font-medium` (lo pone el
+    layout, alineado al `p-6` del contenido)
   - Título de sección/saludo en contenido: `text-2xl font-semibold tracking-tight`
   - Título de card: `CardTitle` (no personalizar tamaño salvo `text-base` en
     tarjetas pequeñas)
