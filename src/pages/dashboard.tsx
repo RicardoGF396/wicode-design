@@ -5,15 +5,23 @@ import {
   ArrowLeftRight,
   CalendarDays,
   ChevronDown,
-  MoreHorizontal,
+  Download,
+  Printer,
 } from "lucide-react"
 import type { DateRange } from "react-day-picker"
 import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
   CartesianGrid,
   Line,
   LineChart,
   Pie,
   PieChart,
+  PolarAngleAxis,
+  RadialBar,
+  RadialBarChart,
   XAxis,
   YAxis,
 } from "recharts"
@@ -22,10 +30,13 @@ import {
   analyticsKpis,
   aovOverTime,
   formatCurrency,
+  ordersPerDay,
   salesBreakdown,
   salesByChannel,
   salesByProduct,
   salesOverTime,
+  salesTarget,
+  sessionsOverTime,
 } from "@/lib/mock-data"
 import { cn } from "@/lib/utils"
 import { PageActions } from "@/components/layout/page-actions"
@@ -76,6 +87,15 @@ const channelChartConfig = {
   "Punto de venta": { label: "Punto de venta", color: "var(--chart-3)" },
 } satisfies ChartConfig
 
+const sessionsChartConfig = {
+  sesiones: { label: "Sesiones", color: "var(--chart-2)" },
+  visitantes: { label: "Visitantes únicos", color: "var(--chart-3)" },
+} satisfies ChartConfig
+
+const ordersChartConfig = {
+  pedidos: { label: "Pedidos", color: "var(--chart-2)" },
+} satisfies ChartConfig
+
 const presetItems: Record<string, string> = {
   hoy: "Hoy",
   "7d": "Últimos 7 días",
@@ -88,7 +108,7 @@ const DAY_MS = 86_400_000
 
 function PeriodLegend() {
   return (
-    <div className="flex items-center justify-center gap-6 pt-2 text-xs text-muted-foreground">
+    <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 pt-2 text-xs text-muted-foreground">
       {Object.values(periodChartConfig).map((serie) => (
         <span key={serie.label} className="flex items-center gap-1.5">
           <span
@@ -151,10 +171,14 @@ export function DashboardPage() {
     <>
       {/* Solo acciones secundarias: el dashboard no tiene acción principal */}
       <PageActions>
-        <Button variant="outline" size="icon" aria-label="Más opciones">
-          <MoreHorizontal />
+        <Button variant="outline">
+          <Download data-icon="inline-start" />
+          Exportar
         </Button>
-        <Button variant="outline">Nueva exploración</Button>
+        <Button variant="outline">
+          <Printer data-icon="inline-start" />
+          Imprimir
+        </Button>
       </PageActions>
 
       {/* Filtros de periodo: preset + calendario (día o rango) + moneda */}
@@ -228,7 +252,7 @@ export function DashboardPage() {
         </Popover>
 
         <Button variant="outline">USD $</Button>
-        <span className="ml-auto text-xs text-muted-foreground">
+        <span className="ml-auto hidden text-xs text-muted-foreground lg:inline">
           Última actualización: 8:55 p.m.
         </span>
       </div>
@@ -239,12 +263,12 @@ export function DashboardPage() {
           <Card key={kpi.label} className="flex-row items-center gap-3 px-5 py-4">
             <div className="min-w-0 flex-1 space-y-1">
               <MetricLabel>{kpi.label}</MetricLabel>
-              <p className="text-lg font-semibold tabular-nums">
+              <p className="truncate text-lg font-medium tabular-nums">
                 {kpi.value}{" "}
                 <span className="align-middle text-muted-foreground">—</span>
               </p>
             </div>
-            <Sparkline data={kpi.spark} />
+            <Sparkline data={kpi.spark} className="hidden lg:block" />
           </Card>
         ))}
       </div>
@@ -331,7 +355,7 @@ export function DashboardPage() {
           <CardHeader>
             <MetricLabel>Ventas totales por canal</MetricLabel>
           </CardHeader>
-          <CardContent className="flex items-center gap-6">
+          <CardContent className="flex flex-wrap items-center gap-6">
             <div className="relative">
               <ChartContainer
                 config={channelChartConfig}
@@ -356,7 +380,7 @@ export function DashboardPage() {
                 </PieChart>
               </ChartContainer>
               <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-xl font-semibold tabular-nums">$827</span>
+                <span className="text-xl font-medium tabular-nums">$827</span>
                 <span className="text-muted-foreground">—</span>
               </div>
             </div>
@@ -442,14 +466,17 @@ export function DashboardPage() {
                 <div key={product.name} className="space-y-1">
                   <p className="truncate text-sm">{product.name}</p>
                   <div className="flex items-center gap-2">
-                    <div
-                      className="h-3 shrink-0 rounded-xs"
-                      style={{
-                        width: `${width}%`,
-                        background: "var(--chart-2)",
-                      }}
-                    />
-                    <span className="text-sm tabular-nums">
+                    {/* El track flexible evita que barra + valor desborden */}
+                    <div className="min-w-0 flex-1">
+                      <div
+                        className="h-3 rounded-xs"
+                        style={{
+                          width: `${width}%`,
+                          background: "var(--chart-2)",
+                        }}
+                      />
+                    </div>
+                    <span className="w-20 shrink-0 text-right text-sm tabular-nums">
                       {formatCurrency(product.value)}
                     </span>
                     <span className="text-muted-foreground">—</span>
@@ -461,6 +488,178 @@ export function DashboardPage() {
                 </div>
               )
             })}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Más gráficas shadcn: área con gradiente, barras y radial de meta */}
+      <div className="grid gap-6 xl:grid-cols-3">
+        {/* Sesiones en el tiempo (área apilada con gradiente) */}
+        <Card>
+          <CardHeader>
+            <MetricLabel>Sesiones en el tiempo</MetricLabel>
+            <CardTitle className="text-xl tabular-nums">
+              412{" "}
+              <span className="align-middle text-sm text-muted-foreground">
+                —
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={sessionsChartConfig} className="h-44 w-full">
+              <AreaChart data={sessionsOverTime} accessibilityLayer>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  interval="preserveStartEnd"
+                />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <defs>
+                  <linearGradient id="fillSesiones" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-sesiones)"
+                      stopOpacity={0.5}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-sesiones)"
+                      stopOpacity={0.05}
+                    />
+                  </linearGradient>
+                  <linearGradient id="fillVisitantes" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-visitantes)"
+                      stopOpacity={0.5}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-visitantes)"
+                      stopOpacity={0.05}
+                    />
+                  </linearGradient>
+                </defs>
+                <Area
+                  dataKey="visitantes"
+                  type="natural"
+                  fill="url(#fillVisitantes)"
+                  stroke="var(--color-visitantes)"
+                  strokeWidth={2}
+                />
+                <Area
+                  dataKey="sesiones"
+                  type="natural"
+                  fill="url(#fillSesiones)"
+                  stroke="var(--color-sesiones)"
+                  strokeWidth={2}
+                />
+              </AreaChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+
+        {/* Pedidos por día (barras) */}
+        <Card>
+          <CardHeader>
+            <MetricLabel>Pedidos por día</MetricLabel>
+            <CardTitle className="text-xl tabular-nums">
+              29{" "}
+              <span className="align-middle text-sm text-muted-foreground">
+                —
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={ordersChartConfig} className="h-44 w-full">
+              <BarChart data={ordersPerDay} accessibilityLayer>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="day"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                />
+                <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                <Bar
+                  dataKey="pedidos"
+                  fill="var(--color-pedidos)"
+                  radius={[4, 4, 0, 0]}
+                />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+
+        {/* Meta de ventas (radial de progreso) */}
+        <Card>
+          <CardHeader>
+            <MetricLabel>Meta de ventas del periodo</MetricLabel>
+          </CardHeader>
+          <CardContent className="flex flex-wrap items-center gap-6">
+            <div className="relative">
+              <ChartContainer
+                config={ordersChartConfig}
+                className="aspect-square h-44"
+              >
+                <RadialBarChart
+                  data={[
+                    {
+                      name: "meta",
+                      progreso: Math.round(
+                        (salesTarget.current / salesTarget.goal) * 100
+                      ),
+                      fill: "var(--chart-2)",
+                    },
+                  ]}
+                  startAngle={90}
+                  endAngle={-270}
+                  innerRadius={66}
+                  outerRadius={82}
+                >
+                  <PolarAngleAxis
+                    type="number"
+                    domain={[0, 100]}
+                    tick={false}
+                    axisLine={false}
+                  />
+                  <RadialBar
+                    dataKey="progreso"
+                    background={{ fill: "var(--muted)" }}
+                    cornerRadius={8}
+                  />
+                </RadialBarChart>
+              </ChartContainer>
+              <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-xl font-medium tabular-nums">
+                  {Math.round((salesTarget.current / salesTarget.goal) * 100)}%
+                </span>
+                <span className="text-xs text-muted-foreground">de la meta</span>
+              </div>
+            </div>
+            <div className="min-w-0 flex-1 space-y-2 text-sm">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-muted-foreground">Actual</span>
+                <span className="tabular-nums">
+                  {formatCurrency(salesTarget.current)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-muted-foreground">Meta</span>
+                <span className="tabular-nums">
+                  {formatCurrency(salesTarget.goal)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-muted-foreground">Restante</span>
+                <span className="tabular-nums">
+                  {formatCurrency(salesTarget.goal - salesTarget.current)}
+                </span>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

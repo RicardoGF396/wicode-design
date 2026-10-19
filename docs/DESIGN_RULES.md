@@ -71,14 +71,13 @@ equipo antes de romperlas.
 
 - **Inter** (`font-sans`) para todo el texto. **Inter Display**
   (`font-heading`) para títulos — `h1`–`h6` la aplican automáticamente.
-- **Peso máximo: 600 (`font-semibold`).** Prohibido cualquier peso mayor:
-  `font-bold`, `font-extrabold`, `font-black` o valores arbitrarios ≥ 700 no
-  existen en este sistema. La jerarquía se logra con tamaño y color, no con
-  pesos pesados.
+- **Peso máximo: 500 (`font-medium`).** Prohibido cualquier peso mayor:
+  `font-semibold`, `font-bold` o valores arbitrarios ≥ 600 no existen en este
+  sistema. La jerarquía se logra con tamaño y color, no con pesos pesados.
 - Jerarquía fija:
   - Título de página: icono `size-5` + `text-base font-medium` (lo pone el
     layout, alineado al `p-6` del contenido)
-  - Título de sección/saludo en contenido: `text-2xl font-semibold tracking-tight`
+  - Título de sección/saludo en contenido: `text-2xl font-medium tracking-tight`
   - Título de card: `CardTitle` (no personalizar tamaño salvo `text-base` en
     tarjetas pequeñas)
   - Texto secundario: `text-sm text-muted-foreground`

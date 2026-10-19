@@ -64,9 +64,13 @@ export const fulfillmentLabel: Record<FulfillmentStatus, string> = {
 
 export const analyticsKpis = [
   { label: "Ventas brutas", value: "$1,009.40", spark: [0, 0, 0, 0, 0, 0, 2, 9, 1, 0] },
-  { label: "Tasa de clientes recurrentes", value: "66.66%", spark: [0, 0, 0, 0, 0, 0, 1, 7, 2, 0] },
-  { label: "Pedidos preparados", value: "4", spark: [0, 0, 0, 0, 0, 0, 1, 4, 1, 0] },
+  { label: "Ventas netas", value: "$827.20", spark: [0, 0, 0, 0, 0, 0, 2, 8, 1, 0] },
   { label: "Pedidos", value: "5", spark: [0, 0, 0, 0, 0, 0, 2, 5, 1, 0] },
+  { label: "Pedidos preparados", value: "4", spark: [0, 0, 0, 0, 0, 0, 1, 4, 1, 0] },
+  { label: "Tasa de clientes recurrentes", value: "66.66%", spark: [0, 0, 0, 0, 0, 0, 1, 7, 2, 0] },
+  { label: "Tasa de conversión", value: "1.8%", spark: [0, 1, 0, 1, 0, 1, 2, 3, 1, 1] },
+  { label: "Sesiones", value: "412", spark: [20, 34, 28, 41, 36, 52, 61, 88, 54, 40] },
+  { label: "Clientes nuevos", value: "3", spark: [0, 0, 1, 0, 0, 0, 1, 2, 0, 0] },
 ]
 
 // Dos series: periodo actual y periodo anterior (comparativo)
@@ -107,6 +111,44 @@ export const aovOverTime = [
   { date: "6 jul", actual: 202, anterior: 0 },
   { date: "10 jul", actual: 0, anterior: 0 },
 ]
+
+// Métricas del encabezado de la página de clientes
+export const customerMetrics = [
+  { label: "Clientes", value: "24", spark: [10, 12, 14, 15, 17, 19, 21, 24] },
+  { label: "Clientes nuevos", value: "3", spark: [0, 1, 0, 1, 0, 0, 1, 3] },
+  { label: "Tasa de recompra", value: "12.5%", spark: [4, 6, 5, 8, 9, 11, 10, 12.5] },
+  { label: "Gasto promedio", value: "$834.40", spark: [420, 510, 480, 640, 590, 720, 780, 834] },
+  { label: "Clientes VIP", value: "4", spark: [1, 1, 2, 2, 3, 3, 4, 4] },
+]
+
+export const sessionsOverTime = [
+  { date: "12 jun", sesiones: 24, visitantes: 18 },
+  { date: "15 jun", sesiones: 38, visitantes: 29 },
+  { date: "18 jun", sesiones: 31, visitantes: 22 },
+  { date: "21 jun", sesiones: 46, visitantes: 35 },
+  { date: "24 jun", sesiones: 41, visitantes: 30 },
+  { date: "27 jun", sesiones: 57, visitantes: 44 },
+  { date: "30 jun", sesiones: 49, visitantes: 36 },
+  { date: "3 jul", sesiones: 74, visitantes: 58 },
+  { date: "6 jul", sesiones: 92, visitantes: 71 },
+  { date: "9 jul", sesiones: 60, visitantes: 47 },
+]
+
+export const ordersPerDay = [
+  { day: "Lun", pedidos: 3 },
+  { day: "Mar", pedidos: 5 },
+  { day: "Mié", pedidos: 2 },
+  { day: "Jue", pedidos: 6 },
+  { day: "Vie", pedidos: 8 },
+  { day: "Sáb", pedidos: 4 },
+  { day: "Dom", pedidos: 1 },
+]
+
+// Progreso hacia la meta de ventas del periodo (para gráfica radial)
+export const salesTarget = {
+  current: 827.2,
+  goal: 1200,
+}
 
 export const salesByProduct = [
   { name: "Pamina Comfort Edredón King", value: 700, previous: 0 },

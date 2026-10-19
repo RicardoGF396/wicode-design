@@ -287,7 +287,7 @@ export function TablePage() {
                 </TooltipTrigger>
                 <TooltipContent>{metric.label}</TooltipContent>
               </Tooltip>
-              <p className="text-sm font-semibold tabular-nums">
+              <p className="text-sm font-medium tabular-nums">
                 {metric.value}
               </p>
             </div>

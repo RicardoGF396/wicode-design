@@ -214,7 +214,7 @@ export function AppSidebar() {
                   <AvatarFallback className="rounded-md">RG</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Ricardo González</span>
+                  <span className="truncate font-medium">Ricardo González</span>
                   <span className="truncate text-xs text-sidebar-foreground/60">
                     ricardo.gonzalez@wicode.com.mx
                   </span>

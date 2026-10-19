@@ -33,17 +33,19 @@ Misma receta que login con más campos. Lo único nuevo:
 
 ## 3. Dashboard — `src/pages/dashboard.tsx`
 
-**Receta (patrón Analytics):** `PageActions` solo con secundarios (sin acción
-primaria) → fila de filtros de periodo → fila de 4 KPIs → grid 2/3 + 1/3
-(gráfica principal + desglose) → grid de 3 (dona por canal, serie secundaria,
-barras por producto).
+**Receta (patrón Analytics):** `PageActions` solo con secundarios (Exportar,
+Imprimir; sin acción primaria) → fila de filtros de periodo → 8 KPIs con
+sparkline → grid 2/3 + 1/3 (gráfica principal + desglose) → grid de 3 (dona
+por canal, serie secundaria, barras por producto) → grid de 3 con más
+gráficas shadcn (`AreaChart` con gradiente, `BarChart` con esquinas
+redondeadas, `RadialBarChart` de progreso hacia la meta con % centrado).
 
 - Filtros de periodo: `Select` de presets (Hoy/7/30/90 días/Personalizado) +
   `Popover` con `Tabs` Rango/Día y `Calendar` (`mode="range"` con
   `numberOfMonths={2}`, o `mode="single"`), formato con `date-fns` y locale
   `es` + botón de moneda.
 - KPI: card horizontal con label de subrayado punteado, valor
-  `text-lg font-semibold tabular-nums` + guion de tendencia y `Sparkline`.
+  `text-lg font-medium tabular-nums` + guion de tendencia y `Sparkline`.
 - Series temporales: `LineChart` con DOS series — periodo actual
   (`--chart-2`) y periodo anterior (mismo color al 35% vía `color-mix`) — y
   leyenda de periodos con puntos de color.
@@ -87,8 +89,13 @@ manteniendo este mismo markup.
 
 ## 5. Drawer Detail — `src/pages/drawer-detail.tsx`
 
-**Receta:** listado (tabla con filas `cursor-pointer`) + **un solo** `Sheet`
-controlado para toda la lista.
+**Receta:** misma estructura que Table (métricas con sparkline, filtro
+integrado con select de segmento + búsqueda + selector de columnas, columnas
+configurables, selección, pie con filas por página y paginación) + filas
+`cursor-pointer` que abren **un solo** `Sheet` controlado para toda la lista.
+
+- El checkbox de selección lleva `onClick` con `stopPropagation` para no
+  abrir el drawer al seleccionar.
 
 - Estado: `useState<Entidad | null>`; `open={x !== null}` y
   `onOpenChange` que limpia al cerrar. Nunca un Sheet por fila.
