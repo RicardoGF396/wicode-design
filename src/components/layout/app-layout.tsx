@@ -1,7 +1,10 @@
 import { useState } from "react"
 import { Outlet, useLocation } from "react-router-dom"
 import {
+  ArrowDownToLine,
+  ArrowUpFromLine,
   BookOpen,
+  Boxes,
   Cable,
   FileText,
   Home,
@@ -18,6 +21,9 @@ const pages: Record<string, { title: string; icon: LucideIcon }> = {
   "/": { title: "Inicio", icon: Home },
   "/table": { title: "Pedidos", icon: ShoppingBag },
   "/drawer-detail": { title: "Clientes", icon: Users },
+  "/accounts-payable": { title: "Cuentas por pagar", icon: ArrowUpFromLine },
+  "/accounts-receivable": { title: "Cuentas por cobrar", icon: ArrowDownToLine },
+  "/inventory": { title: "Inventario", icon: Boxes },
   "/forms": { title: "Formularios", icon: FileText },
   "/mcp-guide": { title: "Guía MCP", icon: Cable },
   "/docs": { title: "Documentación", icon: BookOpen },

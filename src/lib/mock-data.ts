@@ -163,6 +163,142 @@ export const todayOrderMetrics = [
   { label: "Pedidos entregados", value: "5", spark: [0, 1, 0, 2, 1, 3, 2, 5] },
 ]
 
+// ── Cuentas por pagar / por cobrar ───────────────────────────────────────
+
+export type AccountStatus = "pendiente" | "pagado" | "cobrado" | "vencido"
+
+export const accountStatusLabel: Record<AccountStatus, string> = {
+  pendiente: "Pendiente",
+  pagado: "Pagado",
+  cobrado: "Cobrado",
+  vencido: "Vencido",
+}
+
+export type Payable = {
+  id: string
+  vendor: string
+  dueDate: string
+  issueDate: string
+  amount: number
+  status: Extract<AccountStatus, "pendiente" | "pagado" | "vencido">
+  category: string
+  method: string
+}
+
+export const payables: Payable[] = [
+  { id: "FP-2041", vendor: "MX Textil", issueDate: "2026-09-28", dueDate: "2026-10-28", amount: 18450.0, status: "pendiente", category: "Inventario", method: "Transferencia" },
+  { id: "FP-2040", vendor: "Casa Norte", issueDate: "2026-09-20", dueDate: "2026-10-05", amount: 9230.5, status: "vencido", category: "Inventario", method: "Transferencia" },
+  { id: "FP-2039", vendor: "Logística del Bajío", issueDate: "2026-09-30", dueDate: "2026-10-30", amount: 4120.0, status: "pendiente", category: "Logística", method: "Tarjeta" },
+  { id: "FP-2038", vendor: "Aldama Home", issueDate: "2026-09-10", dueDate: "2026-10-10", amount: 25600.0, status: "pagado", category: "Inventario", method: "Transferencia" },
+  { id: "FP-2037", vendor: "Energía MX", issueDate: "2026-09-15", dueDate: "2026-10-15", amount: 3870.75, status: "pagado", category: "Servicios", method: "Domiciliado" },
+  { id: "FP-2036", vendor: "Publicidad Norte", issueDate: "2026-09-18", dueDate: "2026-10-02", amount: 7500.0, status: "vencido", category: "Marketing", method: "Tarjeta" },
+  { id: "FP-2035", vendor: "Empaques del Centro", issueDate: "2026-10-01", dueDate: "2026-10-31", amount: 2140.0, status: "pendiente", category: "Insumos", method: "Transferencia" },
+  { id: "FP-2034", vendor: "Seguros Patria", issueDate: "2026-09-05", dueDate: "2026-10-05", amount: 12300.0, status: "pagado", category: "Servicios", method: "Domiciliado" },
+  { id: "FP-2033", vendor: "MX Textil", issueDate: "2026-09-25", dueDate: "2026-10-25", amount: 16890.0, status: "pendiente", category: "Inventario", method: "Transferencia" },
+  { id: "FP-2032", vendor: "Renta Corporativa", issueDate: "2026-10-01", dueDate: "2026-10-05", amount: 32000.0, status: "vencido", category: "Renta", method: "Transferencia" },
+  { id: "FP-2031", vendor: "Casa Norte", issueDate: "2026-09-12", dueDate: "2026-10-12", amount: 5400.0, status: "pagado", category: "Inventario", method: "Transferencia" },
+  { id: "FP-2030", vendor: "Internet Fibra", issueDate: "2026-09-20", dueDate: "2026-10-20", amount: 1290.0, status: "pendiente", category: "Servicios", method: "Domiciliado" },
+  { id: "FP-2029", vendor: "Papelería Express", issueDate: "2026-09-22", dueDate: "2026-10-22", amount: 870.5, status: "pendiente", category: "Insumos", method: "Tarjeta" },
+  { id: "FP-2028", vendor: "Logística del Bajío", issueDate: "2026-09-08", dueDate: "2026-10-08", amount: 6450.0, status: "pagado", category: "Logística", method: "Transferencia" },
+  { id: "FP-2027", vendor: "Diseño Studio", issueDate: "2026-09-26", dueDate: "2026-10-26", amount: 9800.0, status: "pendiente", category: "Marketing", method: "Transferencia" },
+  { id: "FP-2026", vendor: "Mantenimiento Pro", issueDate: "2026-09-14", dueDate: "2026-09-29", amount: 2300.0, status: "vencido", category: "Servicios", method: "Tarjeta" },
+]
+
+export type Receivable = {
+  id: string
+  customer: string
+  issueDate: string
+  dueDate: string
+  amount: number
+  status: Extract<AccountStatus, "pendiente" | "cobrado" | "vencido">
+  channel: string
+  method: string
+}
+
+export const receivables: Receivable[] = [
+  { id: "FC-5082", customer: "Boutique Aurora", issueDate: "2026-10-01", dueDate: "2026-10-31", amount: 12400.0, status: "pendiente", channel: "Mayoreo", method: "Transferencia" },
+  { id: "FC-5081", customer: "Hotel Reforma", issueDate: "2026-09-15", dueDate: "2026-10-01", amount: 28900.0, status: "vencido", channel: "Corporativo", method: "Transferencia" },
+  { id: "FC-5080", customer: "María González", issueDate: "2026-09-20", dueDate: "2026-10-20", amount: 1250.0, status: "cobrado", channel: "Tienda en línea", method: "Tarjeta" },
+  { id: "FC-5079", customer: "Decoración Viva", issueDate: "2026-10-02", dueDate: "2026-11-01", amount: 8700.5, status: "pendiente", channel: "Mayoreo", method: "Transferencia" },
+  { id: "FC-5078", customer: "Luis Ramírez", issueDate: "2026-09-18", dueDate: "2026-10-18", amount: 2104.99, status: "cobrado", channel: "Instagram", method: "Tarjeta" },
+  { id: "FC-5077", customer: "Restaurante El Patio", issueDate: "2026-09-10", dueDate: "2026-09-25", amount: 15600.0, status: "vencido", channel: "Corporativo", method: "Transferencia" },
+  { id: "FC-5076", customer: "Casa Bella", issueDate: "2026-10-03", dueDate: "2026-11-02", amount: 6400.0, status: "pendiente", channel: "Mayoreo", method: "Transferencia" },
+  { id: "FC-5075", customer: "Ana Martínez", issueDate: "2026-09-22", dueDate: "2026-10-22", amount: 820.0, status: "cobrado", channel: "Tienda en línea", method: "Tarjeta" },
+  { id: "FC-5074", customer: "Spa Zen", issueDate: "2026-09-12", dueDate: "2026-10-12", amount: 9300.0, status: "pendiente", channel: "Corporativo", method: "Transferencia" },
+  { id: "FC-5073", customer: "Hotel Reforma", issueDate: "2026-09-05", dueDate: "2026-09-20", amount: 34200.0, status: "vencido", channel: "Corporativo", method: "Transferencia" },
+  { id: "FC-5072", customer: "Jorge Flores", issueDate: "2026-09-28", dueDate: "2026-10-28", amount: 640.0, status: "cobrado", channel: "Facebook", method: "Tarjeta" },
+  { id: "FC-5071", customer: "Mueblería Centro", issueDate: "2026-10-01", dueDate: "2026-10-31", amount: 18200.0, status: "pendiente", channel: "Mayoreo", method: "Transferencia" },
+  { id: "FC-5070", customer: "Lucía Pérez", issueDate: "2026-09-16", dueDate: "2026-10-16", amount: 1580.25, status: "cobrado", channel: "Tienda en línea", method: "Tarjeta" },
+  { id: "FC-5069", customer: "Oficinas Delta", issueDate: "2026-09-08", dueDate: "2026-09-23", amount: 21000.0, status: "vencido", channel: "Corporativo", method: "Transferencia" },
+  { id: "FC-5068", customer: "Boutique Aurora", issueDate: "2026-09-25", dueDate: "2026-10-25", amount: 7400.0, status: "pendiente", channel: "Mayoreo", method: "Transferencia" },
+  { id: "FC-5067", customer: "Diego Sánchez", issueDate: "2026-09-19", dueDate: "2026-10-19", amount: 475.0, status: "cobrado", channel: "Punto de venta", method: "Efectivo" },
+]
+
+export const payableMetrics = [
+  { label: "Total por pagar", value: "$102,340", spark: [60, 72, 68, 80, 90, 85, 95, 102] },
+  { label: "Vencido", value: "$51,000", spark: [10, 14, 20, 28, 35, 42, 48, 51] },
+  { label: "Por vencer (7 días)", value: "$23,870", spark: [30, 28, 25, 22, 26, 24, 23, 23] },
+  { label: "Facturas abiertas", value: "9", spark: [12, 11, 10, 11, 10, 9, 9, 9] },
+  { label: "Proveedores", value: "11", spark: [8, 9, 9, 10, 10, 11, 11, 11] },
+]
+
+export const receivableMetrics = [
+  { label: "Total por cobrar", value: "$148,970", spark: [90, 100, 110, 120, 130, 140, 145, 148] },
+  { label: "Vencido", value: "$99,000", spark: [20, 35, 48, 60, 72, 84, 92, 99] },
+  { label: "Por cobrar (7 días)", value: "$31,100", spark: [40, 38, 35, 33, 32, 31, 31, 31] },
+  { label: "Facturas abiertas", value: "9", spark: [13, 12, 11, 11, 10, 9, 9, 9] },
+  { label: "Clientes", value: "12", spark: [9, 10, 10, 11, 11, 12, 12, 12] },
+]
+
+// ── Inventario ────────────────────────────────────────────────────────────
+
+export type StockStatus = "en_stock" | "bajo" | "agotado"
+
+export const stockStatusLabel: Record<StockStatus, string> = {
+  en_stock: "En stock",
+  bajo: "Bajo",
+  agotado: "Agotado",
+}
+
+export type InventoryItem = {
+  sku: string
+  product: string
+  category: string
+  location: string
+  available: number
+  committed: number
+  onHand: number
+  unitCost: number
+  status: StockStatus
+}
+
+export const inventory: InventoryItem[] = [
+  { sku: "EDR-PAM-BLA-KNG", product: "Pamina Comfort Edredón · Blanco / King", category: "Edredones", location: "Bodega CDMX", available: 0, committed: 2, onHand: 2, unitCost: 540, status: "agotado" },
+  { sku: "EDR-PAM-BLA-QUE", product: "Pamina Comfort Edredón · Blanco / Queen", category: "Edredones", location: "Bodega CDMX", available: 8, committed: 1, onHand: 9, unitCost: 540, status: "en_stock" },
+  { sku: "EDR-PAM-BEI-KNG", product: "Pamina Comfort Edredón · Beige / King", category: "Edredones", location: "Bodega CDMX", available: 3, committed: 0, onHand: 3, unitCost: 540, status: "bajo" },
+  { sku: "MAN-OCR-STD", product: "Manta Ocre", category: "Mantas", location: "Bodega GDL", available: 30, committed: 0, onHand: 30, unitCost: 180, status: "en_stock" },
+  { sku: "TOA-ALG-GRS", product: "Toalla de algodón · Gris", category: "Baño", location: "Bodega GDL", available: 2, committed: 4, onHand: 6, unitCost: 95, status: "bajo" },
+  { sku: "ALM-PLU-STD", product: "Almohada de plumón", category: "Almohadas", location: "Bodega CDMX", available: 42, committed: 6, onHand: 48, unitCost: 220, status: "en_stock" },
+  { sku: "SAB-LIN-KNG", product: "Juego de sábanas lino · King", category: "Sábanas", location: "Bodega MTY", available: 0, committed: 0, onHand: 0, unitCost: 410, status: "agotado" },
+  { sku: "SAB-LIN-QUE", product: "Juego de sábanas lino · Queen", category: "Sábanas", location: "Bodega MTY", available: 15, committed: 2, onHand: 17, unitCost: 410, status: "en_stock" },
+  { sku: "COB-TER-GRS", product: "Cobija térmica · Gris", category: "Cobijas", location: "Bodega GDL", available: 4, committed: 1, onHand: 5, unitCost: 260, status: "bajo" },
+  { sku: "TAP-DEC-RED", product: "Tapete decorativo · Rojo", category: "Tapetes", location: "Bodega CDMX", available: 20, committed: 3, onHand: 23, unitCost: 150, status: "en_stock" },
+  { sku: "COR-BLK-GRS", product: "Cortina blackout · Gris", category: "Cortinas", location: "Bodega MTY", available: 1, committed: 2, onHand: 3, unitCost: 320, status: "bajo" },
+  { sku: "FUN-DEC-BEI", product: "Funda decorativa · Beige", category: "Fundas", location: "Bodega GDL", available: 60, committed: 8, onHand: 68, unitCost: 75, status: "en_stock" },
+  { sku: "EDR-PAM-VER-KNG", product: "Pamina Comfort Edredón · Verde / King", category: "Edredones", location: "Bodega CDMX", available: 0, committed: 0, onHand: 0, unitCost: 540, status: "agotado" },
+  { sku: "ALM-MEM-STD", product: "Almohada memory foam", category: "Almohadas", location: "Bodega CDMX", available: 25, committed: 5, onHand: 30, unitCost: 290, status: "en_stock" },
+  { sku: "TOA-ALG-BLA", product: "Toalla de algodón · Blanco", category: "Baño", location: "Bodega GDL", available: 3, committed: 2, onHand: 5, unitCost: 95, status: "bajo" },
+  { sku: "SAB-ALG-IND", product: "Juego de sábanas algodón · Individual", category: "Sábanas", location: "Bodega MTY", available: 18, committed: 1, onHand: 19, unitCost: 280, status: "en_stock" },
+]
+
+export const inventoryMetrics = [
+  { label: "SKUs totales", value: "16", spark: [12, 13, 14, 15, 15, 16, 16, 16] },
+  { label: "Unidades disponibles", value: "269", spark: [300, 290, 285, 280, 275, 272, 270, 269] },
+  { label: "Comprometidas", value: "39", spark: [20, 24, 28, 31, 34, 36, 38, 39] },
+  { label: "Bajo stock", value: "5", spark: [2, 2, 3, 3, 4, 4, 5, 5] },
+  { label: "Agotados", value: "3", spark: [0, 1, 1, 2, 2, 3, 3, 3] },
+]
+
 export const formatCurrency = (value: number) =>
   new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(
     value

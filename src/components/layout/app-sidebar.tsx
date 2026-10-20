@@ -1,7 +1,10 @@
 import { Link, useLocation } from "react-router-dom"
 import {
+  ArrowDownToLine,
+  ArrowUpFromLine,
   Bell,
   BookOpen,
+  Boxes,
   Cable,
   Check,
   ChevronRight,
@@ -62,7 +65,13 @@ const mainNav = [
   { title: "Inicio", url: "/", icon: Home },
   { title: "Pedidos", url: "/table", icon: ShoppingBag },
   { title: "Clientes", url: "/drawer-detail", icon: Users },
+  { title: "Inventario", url: "/inventory", icon: Boxes },
   { title: "Formularios", url: "/forms", icon: FileText },
+]
+
+const financeNav = [
+  { title: "Cuentas por pagar", url: "/accounts-payable", icon: ArrowUpFromLine },
+  { title: "Cuentas por cobrar", url: "/accounts-receivable", icon: ArrowDownToLine },
 ]
 
 const resourcesNav = [
@@ -116,6 +125,28 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {mainNav.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    isActive={location.pathname === item.url}
+                    tooltip={item.title}
+                    render={<Link to={item.url} />}
+                    className="rounded-lg text-sidebar-foreground/80 data-active:text-sidebar-accent-foreground"
+                  >
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Finanzas: cuentas por pagar y por cobrar */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Finanzas</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {financeNav.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     isActive={location.pathname === item.url}
