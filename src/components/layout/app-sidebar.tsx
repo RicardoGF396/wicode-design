@@ -7,25 +7,22 @@ import {
   BookOpen,
   Boxes,
   Cable,
-  Check,
   ChevronRight,
   FileText,
   Home,
   LogOut,
-  Monitor,
-  Moon,
   Search,
   Settings,
   ShoppingBag,
   Store,
-  Sun,
   User,
   Users,
 } from "lucide-react"
 
-import { useTheme } from "@/components/theme-provider"
 import { WicodeLogo, WicodeMark } from "@/components/brand/wicode-logo"
 import { NotificationsPanel } from "@/components/layout/notifications-panel"
+import { SettingsDialogContent } from "@/components/layout/settings-dialog"
+import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
@@ -89,7 +86,6 @@ const salesChannels = [
 
 export function AppSidebar() {
   const location = useLocation()
-  const { theme, setTheme } = useTheme()
   const [notifOpen, setNotifOpen] = useState(false)
 
   // Cierra el panel de notificaciones al navegar a otra ruta
@@ -241,36 +237,16 @@ export function AppSidebar() {
             </SidebarMenuBadge>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            {/* Configuración: única vía para cambiar el tema */}
-            <DropdownMenu>
-              <DropdownMenuTrigger
+            {/* Configuración: abre el modal de ajustes (tema incluido) */}
+            <Dialog>
+              <DialogTrigger
                 render={<SidebarMenuButton tooltip="Configuración" />}
               >
                 <Settings />
                 <span>Configuración</span>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent side="top" align="start" className="w-48">
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel>Tema</DropdownMenuLabel>
-                  {(
-                    [
-                      { value: "light", label: "Claro", icon: Sun },
-                      { value: "dark", label: "Oscuro", icon: Moon },
-                      { value: "system", label: "Sistema", icon: Monitor },
-                    ] as const
-                  ).map((option) => (
-                    <DropdownMenuItem
-                      key={option.value}
-                      onClick={() => setTheme(option.value)}
-                    >
-                      <option.icon />
-                      {option.label}
-                      {theme === option.value && <Check className="ml-auto" />}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </DialogTrigger>
+              <SettingsDialogContent />
+            </Dialog>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <DropdownMenu>

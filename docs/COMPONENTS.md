@@ -5,7 +5,7 @@
 ```
 src/components/
 ├── ui/          ← shadcn/ui. Se agregan con el CLI. NO se editan a mano.
-├── layout/      ← AppLayout, AppSidebar, AuthLayout, PageActions, NotificationsPanel.
+├── layout/      ← AppLayout, AppSidebar, AuthLayout, PageActions, NotificationsPanel, SettingsDialog.
 ├── data-table/  ← DataTableShell: la receta Table como componente reutilizable.
 ├── <dominio>/   ← Componentes de negocio (ej. orders/, finance/, inventory/).
 └── theme-*.tsx  ← Proveedor y toggle de tema.
@@ -98,6 +98,22 @@ Excepciones vigentes a "no editar `ui/`", decididas para este sistema:
   `TableHeader` anula el `border-b` de sus filas: la línea inferior del
   encabezado la pone `data-table` con una sombra en los `th` (una sola línea,
   compatible con encabezado sticky).
+
+## SettingsDialog (modal de configuración)
+
+`src/components/layout/settings-dialog.tsx` exporta `SettingsDialogContent`:
+un `DialogContent` grande (`sm:max-w-4xl`, alto fijo, `p-0 gap-0
+overflow-hidden`) en dos paneles — menú de secciones a la izquierda
+(`nav` con borde y `bg-muted/30`, item activo resaltado) y el contenido de la
+sección activa a la derecha (scrollable, `max-w-xl` centrado). Trae 12
+secciones (General, Apariencia, Cuenta, Notificaciones, Facturación, Pagos,
+Envíos, Impuestos, Equipo, Seguridad, Integraciones, Avanzado) con controles
+reales (Switch, Select, RadioGroup, InputGroup, AlertDialog…). Helpers
+internos `SettingRow` (fila label+descripción+control) y `SectionHeader`. El
+tema vive en la sección Apariencia (`useTheme`). Se abre desde el botón
+Configuración del sidebar con `Dialog` + `DialogTrigger render={<SidebarMenuButton/>}`.
+Para agregar una sección: añade una entrada a `sections` con `key`, `label`,
+`icon` y `render`.
 
 ## NotificationsPanel (flyout del sidebar)
 
