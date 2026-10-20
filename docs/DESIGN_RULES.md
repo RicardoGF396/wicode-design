@@ -122,6 +122,11 @@ equipo antes de romperlas.
   lleva `min-h-0 flex-1 !shrink` y el contenido scrollea por dentro
   (`table-sticky-header` hace que el contenedor interno sea `flex-1` con
   `overflow-y: auto`).
+- El pie de la tabla (resumen de selección + filas por página + paginación)
+  es una **fila dentro de la card**, pegada abajo (`shrink-0`), con el mismo
+  fondo que el encabezado (`bg-table-header`) y borde superior. Los botones de
+  página anterior/siguiente son `Button variant="outline" size="icon-sm"` con
+  `ChevronLeft`/`ChevronRight` (nunca texto "Anterior/Siguiente").
 - Tablas anchas (con scroll horizontal): agregar `table-sticky-header`
   (encabezado fijo dentro de la card) y `table-sticky-col`
   (checkbox + primera columna de datos fijos a la izquierda, con sombra y

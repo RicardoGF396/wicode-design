@@ -1,6 +1,8 @@
 import { useMemo, useState, type ReactNode } from "react"
 import {
   CalendarDays,
+  ChevronLeft,
+  ChevronRight,
   Columns3,
   Download,
   Mail,
@@ -413,57 +415,65 @@ export function DrawerDetailPage() {
             )}
           </TableBody>
         </Table>
-      </Card>
 
-      {/* Pie: selección + filas por página + paginación */}
-      <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <span>
-          {checked.size} de {filtered.length} clientes seleccionados
-        </span>
-        <div className="flex items-center gap-2">
-          <span>Filas por página</span>
-          <Select
-            items={pageSizeItems}
-            value={String(pageSize)}
-            onValueChange={(value) => {
-              setPageSize(Number(value ?? 25))
-              setPage(1)
-            }}
-          >
-            <SelectTrigger size="sm" className="w-auto gap-1 bg-card">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {Object.keys(pageSizeItems).map((size) => (
-                  <SelectItem key={size} value={size}>
-                    {size}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <span className="ml-2">
-            Página {currentPage} de {totalPages}
+        {/* Pie dentro de la card: fondo del encabezado + paginación con chevrons */}
+        <div className="flex shrink-0 items-center justify-between gap-4 border-t bg-table-header px-4 py-2.5 text-sm text-muted-foreground">
+          <span className="truncate">
+            {checked.size} de {filtered.length} clientes seleccionados
           </span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={currentPage === 1}
-            onClick={() => setPage(currentPage - 1)}
-          >
-            Anterior
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={currentPage === totalPages}
-            onClick={() => setPage(currentPage + 1)}
-          >
-            Siguiente
-          </Button>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <span className="hidden sm:inline">Filas por página</span>
+              <Select
+                items={pageSizeItems}
+                value={String(pageSize)}
+                onValueChange={(value) => {
+                  setPageSize(Number(value ?? 25))
+                  setPage(1)
+                }}
+              >
+                <SelectTrigger size="sm" className="w-auto gap-1 bg-card">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {Object.keys(pageSizeItems).map((size) => (
+                      <SelectItem key={size} value={size}>
+                        {size}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <span className="hidden whitespace-nowrap sm:inline">
+              Página {currentPage} de {totalPages}
+            </span>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon-sm"
+                aria-label="Página anterior"
+                className="bg-card"
+                disabled={currentPage === 1}
+                onClick={() => setPage(currentPage - 1)}
+              >
+                <ChevronLeft />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon-sm"
+                aria-label="Página siguiente"
+                className="bg-card"
+                disabled={currentPage === totalPages}
+                onClick={() => setPage(currentPage + 1)}
+              >
+                <ChevronRight />
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
+      </Card>
 
       {/* Drawer de detalle: un solo Sheet controlado para toda la lista */}
       <Sheet
