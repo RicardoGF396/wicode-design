@@ -5,7 +5,7 @@
 ```
 src/components/
 ├── ui/          ← shadcn/ui. Se agregan con el CLI. NO se editan a mano.
-├── layout/      ← AppLayout, AppSidebar, AuthLayout, PageActions.
+├── layout/      ← AppLayout, AppSidebar, AuthLayout, PageActions, NotificationsPanel.
 ├── data-table/  ← DataTableShell: la receta Table como componente reutilizable.
 ├── <dominio>/   ← Componentes de negocio (ej. orders/, finance/, inventory/).
 └── theme-*.tsx  ← Proveedor y toggle de tema.
@@ -98,6 +98,17 @@ Excepciones vigentes a "no editar `ui/`", decididas para este sistema:
   `TableHeader` anula el `border-b` de sus filas: la línea inferior del
   encabezado la pone `data-table` con una sombra en los `th` (una sola línea,
   compatible con encabezado sticky).
+
+## NotificationsPanel (flyout del sidebar)
+
+`src/components/layout/notifications-panel.tsx` es el panel de notificaciones
+que se despliega **pegado al borde derecho del sidebar**, a toda altura
+(`fixed inset-y-0`, `left` = `--sidebar-width` / `--sidebar-width-icon` según
+el estado del sidebar vía `useSidebar`, `0` en móvil). Trae encabezado con
+conteo de no leídas, switch "No leídas", menú `…` y cerrar; `Tabs variant=line`
+(Todas / Menciones / Acciones) y lista con icono, punto rojo de no leída,
+título, descripción y hora. Cierra con clic fuera (captura transparente),
+`Escape` y al navegar. Lo controla `AppSidebar` desde el botón Notificaciones.
 
 ## DataTableShell (receta Table reutilizable)
 

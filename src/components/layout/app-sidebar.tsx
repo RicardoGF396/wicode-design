@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import {
   ArrowDownToLine,
@@ -24,6 +25,7 @@ import {
 
 import { useTheme } from "@/components/theme-provider"
 import { WicodeLogo, WicodeMark } from "@/components/brand/wicode-logo"
+import { NotificationsPanel } from "@/components/layout/notifications-panel"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
@@ -88,8 +90,15 @@ const salesChannels = [
 export function AppSidebar() {
   const location = useLocation()
   const { theme, setTheme } = useTheme()
+  const [notifOpen, setNotifOpen] = useState(false)
+
+  // Cierra el panel de notificaciones al navegar a otra ruta
+  useEffect(() => {
+    setNotifOpen(false)
+  }, [location.pathname])
 
   return (
+    <>
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
         <SidebarMenu>
@@ -218,7 +227,11 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Notificaciones" render={<a href="#" />}>
+            <SidebarMenuButton
+              tooltip="Notificaciones"
+              isActive={notifOpen}
+              onClick={() => setNotifOpen((open) => !open)}
+            >
               <Bell />
               <span>Notificaciones</span>
             </SidebarMenuButton>
@@ -306,5 +319,7 @@ export function AppSidebar() {
           abrir/cerrar el sidebar */}
       <SidebarRail />
     </Sidebar>
+    <NotificationsPanel open={notifOpen} onOpenChange={setNotifOpen} />
+    </>
   )
 }

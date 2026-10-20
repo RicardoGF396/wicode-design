@@ -299,6 +299,31 @@ export const inventoryMetrics = [
   { label: "Agotados", value: "3", spark: [0, 1, 1, 2, 2, 3, 3, 3] },
 ]
 
+// ── Notificaciones (panel del sidebar) ───────────────────────────────────
+
+export type NotificationKind = "pedido" | "pago" | "inventario" | "mencion"
+
+export type AppNotification = {
+  id: string
+  kind: NotificationKind
+  title: string
+  description: string
+  time: string
+  unread: boolean
+  mention?: boolean
+}
+
+export const notifications: AppNotification[] = [
+  { id: "n1", kind: "pedido", title: "Nuevo pedido #1054", description: "María González realizó un pedido por $1,250.00.", time: "Justo ahora", unread: true },
+  { id: "n2", kind: "pago", title: "Pago recibido", description: "Se cobró la factura FC-5080 por $1,250.00.", time: "Hace 12 min", unread: true },
+  { id: "n3", kind: "inventario", title: "Stock bajo", description: "«Toalla de algodón · Gris» quedó con 2 unidades.", time: "Hace 1 h", unread: true },
+  { id: "n4", kind: "mencion", title: "Ana te mencionó", description: "@ricardo revisa la factura vencida de Hotel Reforma.", time: "Hace 3 h", unread: false, mention: true },
+  { id: "n5", kind: "inventario", title: "Producto agotado", description: "«Pamina Comfort Edredón · Verde / King» se agotó.", time: "Ayer", unread: false },
+  { id: "n6", kind: "pedido", title: "Pedido preparado", description: "El pedido #1048 fue marcado como preparado.", time: "Ayer", unread: false },
+  { id: "n7", kind: "pago", title: "Factura vencida", description: "La factura FP-2040 de Casa Norte venció hoy.", time: "18 oct 2026", unread: false },
+  { id: "n8", kind: "mencion", title: "Diego te mencionó", description: "@ricardo ¿aprobamos el ajuste de inventario?", time: "17 oct 2026", unread: false, mention: true },
+]
+
 export const formatCurrency = (value: number) =>
   new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(
     value
