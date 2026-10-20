@@ -139,11 +139,23 @@ equipo antes de romperlas.
   (ej. nombre y correo) en la misma celda: el dato secundario va en su propia
   columna (ocultable en pantallas chicas con `hidden lg:table-cell`) o en el
   detalle de la fila.
-- Badges de estado: componente `StatusPill` (patrón Orders) — pastilla con
-  relleno (`--badge-neutral` gris para estados resueltos, `--badge-caution`
-  naranja y `--badge-attention` amarillo para los que requieren acción),
-  texto en peso 400 color foreground, punto relleno si está resuelto y
-  círculo abierto si está pendiente. Nunca inventar colores nuevos de badge.
+- Badges de estado: **siempre** el componente `StatusPill` con el estándar
+  semántico tipo semáforo — nunca colores sueltos ni tonos nuevos. Texto en
+  peso 400 color foreground; punto relleno si el estado está asentado/terminal
+  y círculo abierto si está activo y pide seguimiento:
+
+  | Tono | Color | Significado | Ejemplos |
+  |---|---|---|---|
+  | `success` | verde `--badge-success` | resultado positivo confirmado | Pagado, Cobrado, Preparado, En stock |
+  | `info` | azul `--badge-info` | en tránsito · informativo activo | Enviado |
+  | `warning` | amarillo `--badge-warning` | requiere atención · pendiente · bajo | Pendiente, Sin preparar, Bajo |
+  | `critical` | rojo `--badge-critical` | negativo · urgente | Vencido, Agotado, Cancelado |
+  | `neutral` | gris `--badge-neutral` | sin carga · no aplica | No se requiere |
+
+  Un estado se mapea a un tono por su **significado**, no por su página: el
+  mismo significado usa siempre el mismo color. Cada entidad tiene su badge de
+  dominio (`OrderStatusBadge`, `AccountStatusBadge`, `StockStatusBadge`…) que
+  solo mapea estado → tono sobre `StatusPill`.
 - **Peso en tablas: todo 400.** Encabezados y celdas van en `font-normal`;
   nada de `font-medium` ni `font-semibold` dentro de una tabla. El énfasis se
   logra con color (`text-muted-foreground` para lo secundario), no con peso.

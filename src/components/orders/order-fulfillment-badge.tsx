@@ -8,9 +8,9 @@ const fulfillmentConfig: Record<
   FulfillmentStatus,
   { tone: StatusPillTone; resolved: boolean }
 > = {
-  preparado: { tone: "neutral", resolved: true },
+  preparado: { tone: "success", resolved: true },
   no_requerido: { tone: "neutral", resolved: true },
-  sin_preparar: { tone: "attention", resolved: false },
+  sin_preparar: { tone: "warning", resolved: false },
 }
 
 export function OrderFulfillmentBadge({ status }: { status: FulfillmentStatus }) {

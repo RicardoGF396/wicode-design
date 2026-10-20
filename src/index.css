@@ -31,9 +31,12 @@
     --color-info-foreground: var(--info-foreground);
     --color-table-foreground: var(--table-foreground);
     --color-table-header: var(--table-header);
+    /* Badges de estado: semáforo semántico (+ info azul y neutral gris) */
     --color-badge-neutral: var(--badge-neutral);
-    --color-badge-caution: var(--badge-caution);
-    --color-badge-attention: var(--badge-attention);
+    --color-badge-success: var(--badge-success);
+    --color-badge-info: var(--badge-info);
+    --color-badge-warning: var(--badge-warning);
+    --color-badge-critical: var(--badge-critical);
     --color-ring: var(--ring);
     --color-input: var(--input);
     --color-border: var(--border);
@@ -100,8 +103,10 @@
     /* Pastillas de estado (patron Orders): gris para estados resueltos,
        naranja para atencion de pago, amarillo para preparacion pendiente */
     --badge-neutral: #e3e3e3;
-    --badge-caution: #ffd6a4;
-    --badge-attention: #ffeb78;
+    --badge-success: #c3ecd1;
+    --badge-info: #cfe0fb;
+    --badge-warning: #ffe27a;
+    --badge-critical: #ffcfcf;
     /* Sidebar oscuro sobre contenido claro (patron del layout base) */
     --sidebar: oklch(0.17 0 0);
     --sidebar-foreground: oklch(0.87 0 0);
@@ -146,8 +151,10 @@
     --table-foreground: oklch(0.85 0 0);
     --table-header: oklch(0.24 0 0);
     --badge-neutral: oklch(0.32 0 0);
-    --badge-caution: oklch(0.4 0.08 65);
-    --badge-attention: oklch(0.42 0.09 100);
+    --badge-success: oklch(0.42 0.09 155);
+    --badge-info: oklch(0.43 0.09 250);
+    --badge-warning: oklch(0.42 0.09 100);
+    --badge-critical: oklch(0.4 0.09 25);
     --sidebar: oklch(0.17 0 0);
     --sidebar-foreground: oklch(0.87 0 0);
     --sidebar-primary: oklch(0.985 0 0);

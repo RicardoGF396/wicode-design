@@ -52,8 +52,14 @@ en el texto. Ver `src/components/orders/order-status-badge.tsx`.
 | `--table-foreground` | `text-table-foreground` (lo aplica `data-table`) | Texto de tablas: `#4b4b4b` en light, gris claro en dark |
 | `--table-header` | `bg-table-header` (lo aplica `data-table`) | Fondo del encabezado de tabla (`#f7f7f7` en light) |
 | `--badge-neutral` | `bg-badge-neutral` | Pastilla de estado resuelto (`#e3e3e3`) |
-| `--badge-caution` | `bg-badge-caution` | Pastilla de atención de pago (naranja `#ffd6a4`) |
-| `--badge-attention` | `bg-badge-attention` | Pastilla de preparación pendiente (amarillo `#ffeb78`) |
+| `--badge-success` | `bg-badge-success` | Resultado positivo — pagado, cobrado, en stock (verde `#c3ecd1`) |
+| `--badge-info` | `bg-badge-info` | En tránsito / informativo — enviado (azul `#cfe0fb`) |
+| `--badge-warning` | `bg-badge-warning` | Requiere atención — pendiente, bajo (amarillo `#ffe27a`) |
+| `--badge-critical` | `bg-badge-critical` | Negativo / urgente — vencido, agotado, cancelado (rojo `#ffcfcf`) |
+
+Estándar de estados tipo semáforo (tono = significado, no página): ver
+"Badges de estado" en DESIGN_RULES §8. Son los únicos tonos de badge de
+estado; no se crean colores nuevos.
 
 ## Gráficas
 

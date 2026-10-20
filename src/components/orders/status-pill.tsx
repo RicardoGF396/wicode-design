@@ -3,17 +3,30 @@ import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 
-export type StatusPillTone = "neutral" | "caution" | "attention"
+// Estándar semántico de estados (único para todas las tablas · semáforo):
+//   success  → verde    · resultado positivo confirmado (pagado, en stock)
+//   info     → azul     · en tránsito / informativo activo (enviado)
+//   warning  → amarillo · requiere atención (pendiente, sin preparar, bajo)
+//   critical → rojo     · negativo / urgente (vencido, agotado, cancelado)
+//   neutral  → gris     · sin carga / no aplica (no se requiere)
+export type StatusPillTone =
+  | "neutral"
+  | "success"
+  | "info"
+  | "warning"
+  | "critical"
 
 const toneStyles: Record<StatusPillTone, string> = {
   neutral: "bg-badge-neutral",
-  caution: "bg-badge-caution",
-  attention: "bg-badge-attention",
+  success: "bg-badge-success",
+  info: "bg-badge-info",
+  warning: "bg-badge-warning",
+  critical: "bg-badge-critical",
 }
 
 // Pastilla de estado (patrón Orders): relleno suave, texto normal.
-// "resolved" muestra punto relleno (estado terminado); si no, un círculo
-// abierto (estado pendiente de acción).
+// "resolved" muestra punto relleno (estado asentado/terminal); si no, un
+// círculo abierto (estado activo que pide seguimiento: pendiente, vencido…).
 export function StatusPill({
   tone,
   resolved = false,

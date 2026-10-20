@@ -5,10 +5,10 @@ import { StatusPill, type StatusPillTone } from "@/components/orders/status-pill
 // Estado de pago (patrón Orders): gris con punto relleno para estados
 // resueltos; naranja con círculo abierto cuando requiere acción.
 const statusConfig: Record<OrderStatus, { tone: StatusPillTone; resolved: boolean }> = {
-  pagado: { tone: "neutral", resolved: true },
-  enviado: { tone: "neutral", resolved: true },
-  cancelado: { tone: "neutral", resolved: true },
-  pendiente: { tone: "caution", resolved: false },
+  pagado: { tone: "success", resolved: true },
+  enviado: { tone: "info", resolved: true },
+  cancelado: { tone: "critical", resolved: true },
+  pendiente: { tone: "warning", resolved: false },
 }
 
 export function OrderStatusBadge({ status }: { status: OrderStatus }) {

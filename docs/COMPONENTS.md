@@ -6,7 +6,8 @@
 src/components/
 ├── ui/          ← shadcn/ui. Se agregan con el CLI. NO se editan a mano.
 ├── layout/      ← AppLayout, AppSidebar, AuthLayout, PageActions.
-├── <dominio>/   ← Componentes de negocio (ej. orders/, dashboard/).
+├── data-table/  ← DataTableShell: la receta Table como componente reutilizable.
+├── <dominio>/   ← Componentes de negocio (ej. orders/, finance/, inventory/).
 └── theme-*.tsx  ← Proveedor y toggle de tema.
 ```
 
@@ -97,6 +98,27 @@ Excepciones vigentes a "no editar `ui/`", decididas para este sistema:
   `TableHeader` anula el `border-b` de sus filas: la línea inferior del
   encabezado la pone `data-table` con una sombra en los `th` (una sola línea,
   compatible con encabezado sticky).
+
+## DataTableShell (receta Table reutilizable)
+
+`src/components/data-table/data-table-shell.tsx` encapsula la receta de tabla
+(métricas con sparkline, filtro integrado con select + búsqueda + selector de
+columnas, selección, sticky header/columna y paginación con filas por página).
+Las páginas de listado nuevas la consumen pasando `metrics`, `filterItems`,
+`matchesFilter`/`matchesSearch`, `primaryHeader`/`primaryCell`, `columns`
+(arreglo `DataColumn<T>`), `rows`, `getRowId`, y opcionalmente `rowActions`
+(items del menú por fila), `onRowClick` e `isRowCancelled`. Así las páginas de
+listado quedan en ~120 líneas y 100% consistentes. Lo usan Cuentas por pagar,
+Cuentas por cobrar e Inventario.
+
+> Las páginas canónicas hechas a mano (`table-page.tsx`, `drawer-detail.tsx`)
+> se conservan como ejemplo legible de la receta; las nuevas usan el shell.
+
+Estados de negocio nuevos reutilizan `StatusPill` con el estándar tipo
+semáforo (`success` verde, `info` azul, `warning` amarillo, `critical` rojo,
+`neutral` gris; ver DESIGN_RULES §8): `finance/account-status-badge`
+(pagado = `success`, vencido = `critical`) e `inventory/stock-status-badge`
+(en stock = `success`, agotado = `critical`).
 
 ## Reglas
 

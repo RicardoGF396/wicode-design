@@ -99,10 +99,18 @@ configurables, selección, pie con filas por página y paginación) + filas
 
 - Estado: `useState<Entidad | null>`; `open={x !== null}` y
   `onOpenChange` que limpia al cerrar. Nunca un Sheet por fila.
-- Contenido del drawer: `SheetHeader` con avatar + título/subtítulo → stats en
-  grid de 2 → bloque de contacto con iconos → `Separator` → `Tabs` para
-  contenido secundario → `SheetFooter` con acciones (primaria + outline).
-- El cuerpo scrollea: `flex-1 overflow-y-auto px-4`.
+- Ancho y posición: `SheetContent` flotante con márgenes y esquinas
+  redondeadas — `data-[side=right]:inset-y-3 data-[side=right]:right-3
+  data-[side=right]:h-auto data-[side=right]:border data-[side=right]:sm:max-w-xl`
+  + `rounded-xl overflow-hidden`. Clave: el componente base pinta la posición
+  y el ancho con la variante `data-[side=right]:` (inset-y-0, right-0, h-full,
+  sm:max-w-sm); para sobrescribirlos hay que usar la MISMA variante, o
+  tailwind-merge conserva ambos y gana el del componente.
+- Estructura homologada a shadcn: `SheetContent` con `gap-0 p-0`; header con
+  `border-b p-6` (avatar + título/subtítulo + badge de segmento, `pr-12` para
+  librar el botón de cerrar); cuerpo `flex-1 overflow-y-auto p-6 space-y-6`
+  (stats en grid de 2 con `bg-muted/40`, contacto en tarjeta con `divide-y`,
+  `Tabs`). Sin footer de acciones.
 
 **Recicla para:** detalle de pedido, ficha de usuario, panel de configuración
 contextual, preview de registro.
@@ -198,3 +206,23 @@ Copiar y Descargar) y cuerpo `pre` scrolleable. El contenido se importa con
 `?raw` desde `/docs`, así siempre refleja la fuente de verdad.
 
 **Recicla para:** visores de changelog, políticas o cualquier markdown.
+
+## 9. Listados sobre DataTableShell — pagar / cobrar / inventario
+
+`src/pages/accounts-payable.tsx`, `accounts-receivable.tsx`, `inventory.tsx`.
+
+**Receta:** `PageActions` (Exportar + primaria) + `<DataTableShell>` con la
+configuración de la página. El shell (`components/data-table/`) aporta toda la
+receta Table (métricas con sparkline, filtro integrado, columnas
+configurables, selección, sticky, paginación). Cada página solo define:
+
+- `metrics` y `metricsLabel`, `filterItems` + `matchesFilter`/`matchesSearch`.
+- `primaryHeader`/`primaryCell` (columna sticky, ej. Folio o Producto) y
+  `columns` (`DataColumn<T>[]`).
+- `rows`, `getRowId`, `entityPlural` y `rowActions` (menú por fila con su
+  `AlertDialog` de borrado).
+- Estado de negocio con el badge de dominio (`AccountStatusBadge`,
+  `StockStatusBadge`) sobre `StatusPill` — vencido/agotado en tono `critical`.
+
+**Recicla para:** cualquier listado nuevo (facturas, movimientos, usuarios…).
+Partir de una de estas tres páginas es el camino más corto para un listado.
