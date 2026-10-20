@@ -109,22 +109,57 @@ contextual, preview de registro.
 
 ## 6. One Page Forms — `src/pages/forms.tsx`
 
-**Receta:** `PageActions` (Descartar `outline` + Guardar primario) → `form`
-con `id` en grid `lg:grid-cols-3` → columna principal (2/3) con una `Card`
-por sección → columna lateral (1/3) con organización.
+**Receta:** `PageActions` (Descartar con `AlertDialog` de confirmación +
+Guardar primario asociado por `form="<id>"`) → resumen de errores
+(`Alert variant="destructive"` con conteo, visible tras submit inválido) →
+`form` en grid `lg:grid-cols-3` con una `Card` por sección.
 
-- El botón Guardar vive en el header y se asocia al formulario con el
-  atributo `form="<id-del-form>"` (submit a distancia).
+Casos cubiertos (catálogo de patrones de formulario):
 
-- Cada sección es una `Card` con `CardTitle`/`CardDescription` y un
-  `FieldGroup` dentro. Campos en pares con `sm:grid-cols-2`.
-- Dinero: `InputGroup` con addon `$` y sufijo de moneda.
-- Toggles: `Field orientation="horizontal"` con `FieldContent`
-  (label + descripción) y `Switch` vía `Controller`.
-- Select y RadioGroup vía `Controller`; el resto con `form.register`.
-- Un solo submit al final de la columna lateral; `form.reset()` en Descartar.
+- **Texto y validación**: `Field` + `Input` + `FieldError`, esquema zod único
+  con mensajes en español; `aria-invalid`/`data-invalid` en cada campo.
+- **Rich text**: toolbar (negritas, cursivas, subrayado, listas) +
+  `contentEditable` controlado con `Controller`; la validación zod se hace
+  sobre el texto plano (strip de etiquetas).
+- **Subida de imágenes**: dropzone con drag & drop (estado resaltado con
+  `border-info`), input file oculto, previews en grid con botón de quitar y
+  límite validado por zod.
+- **Dinero y unidades**: `InputGroup` con prefijos/sufijos (`$`, `+$`,
+  dominio del slug).
+- **Lista dinámica**: variantes con `useFieldArray` (agregar/eliminar filas,
+  errores por fila y error raíz de mínimo/máximo).
+- **Búsqueda en listas**: combobox de categoría con `Popover` + `Command`
+  (búsqueda, check en la seleccionada) y item `forceMount`
+  "Crear categoría…" que abre un **`Dialog`** de alta rápida (crea,
+  selecciona y notifica con toast).
+- **Badges**: etiquetas tipo tags-input (Enter/coma agrega, X quita),
+  renderizadas como `Badge` neutral.
+- **Contadores**: campos SEO con contador `n/máx` que se pinta destructive
+  al excederse; slug validado con regex.
+- **Controles**: `Select`, `RadioGroup`, `Switch`, `Checkbox` conectados con
+  `Controller`; los nativos con `form.register`.
+- **Fechas y hora**: `Popover` + `Calendar` en `mode="single"` (fecha de
+  disponibilidad, requerida con `z.date`) y `mode="range"` (promoción,
+  opcional), formato con `date-fns` y locale `es`; hora con
+  `Input type="time"`.
+- **Slider**: descuento 0–50% con valor visible junto al label.
+- **Toggle group**: condición (Nuevo/Usado/Reacondicionado) de selección
+  única (el `value` de Base UI es arreglo; se toma el último).
+- **Stepper numérico**: stock con `InputGroupButton` +/- que hace
+  `setValue` validado.
+- **OTP**: PIN de bodega con `InputOTP` de 4 dígitos (`z.string().length`).
+- **Regex y formatos**: SKU en mayúsculas, código de barras de 8–14 dígitos,
+  teléfono, `z.email` y `z.url` (sitio opcional con `z.literal("")`).
+- **Color picker**: input nativo `type="color"` sincronizado con un `Input`
+  hex validado por regex.
+- **Multi-selección**: canales de venta como grupo de checkboxes sobre
+  `z.array(...).min(1)`.
+- **Campo condicional**: "Incluye garantía" (`Switch`) muestra "Meses de
+  garantía", obligatorio solo si está activo (`superRefine`).
+- **Textarea con contador**: notas internas con máximo de 300.
 
-**Recicla para:** alta/edición de cualquier entidad, página de configuración.
+**Recicla para:** alta/edición de cualquier entidad compleja, página de
+configuración, wizard de un paso.
 
 ---
 

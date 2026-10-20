@@ -67,10 +67,6 @@ export const analyticsKpis = [
   { label: "Ventas netas", value: "$827.20", spark: [0, 0, 0, 0, 0, 0, 2, 8, 1, 0] },
   { label: "Pedidos", value: "5", spark: [0, 0, 0, 0, 0, 0, 2, 5, 1, 0] },
   { label: "Pedidos preparados", value: "4", spark: [0, 0, 0, 0, 0, 0, 1, 4, 1, 0] },
-  { label: "Tasa de clientes recurrentes", value: "66.66%", spark: [0, 0, 0, 0, 0, 0, 1, 7, 2, 0] },
-  { label: "Tasa de conversión", value: "1.8%", spark: [0, 1, 0, 1, 0, 1, 2, 3, 1, 1] },
-  { label: "Sesiones", value: "412", spark: [20, 34, 28, 41, 36, 52, 61, 88, 54, 40] },
-  { label: "Clientes nuevos", value: "3", spark: [0, 0, 1, 0, 0, 0, 1, 2, 0, 0] },
 ]
 
 // Dos series: periodo actual y periodo anterior (comparativo)

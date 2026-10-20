@@ -181,6 +181,8 @@ export function DashboardPage() {
         </Button>
       </PageActions>
 
+      {/* Contenido principal acotado y centrado */}
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
       {/* Filtros de periodo: preset + calendario (día o rango) + moneda */}
       <div className="flex flex-wrap items-center gap-2">
         <Select items={presetItems} value={preset} onValueChange={(v) => applyPreset(v ?? "30d")}>
@@ -273,9 +275,9 @@ export function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-2">
         {/* Ventas totales en el tiempo */}
-        <Card className="xl:col-span-2">
+        <Card className="lg:col-span-2">
           <CardHeader>
             <MetricLabel>Ventas totales en el tiempo</MetricLabel>
             <CardTitle className="text-2xl tabular-nums">
@@ -300,6 +302,48 @@ export function DashboardPage() {
                   axisLine={false}
                   width={44}
                   tickFormatter={(value: number) => `$${value}`}
+                />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Line
+                  dataKey="anterior"
+                  type="monotone"
+                  stroke="var(--color-anterior)"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  dataKey="actual"
+                  type="monotone"
+                  stroke="var(--color-actual)"
+                  strokeWidth={2}
+                  dot={false}
+                />
+              </LineChart>
+            </ChartContainer>
+            <PeriodLegend />
+          </CardContent>
+        </Card>
+
+        {/* Valor promedio de pedido */}
+        <Card>
+          <CardHeader>
+            <MetricLabel>Valor promedio del pedido</MetricLabel>
+            <CardTitle className="text-xl tabular-nums">
+              $201.84{" "}
+              <span className="align-middle text-sm text-muted-foreground">
+                —
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={periodChartConfig} className="h-64 w-full">
+              <LineChart data={aovOverTime} accessibilityLayer>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
                 />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <Line
@@ -347,9 +391,75 @@ export function DashboardPage() {
             ))}
           </CardContent>
         </Card>
-      </div>
 
-      <div className="grid gap-6 xl:grid-cols-3">
+        {/* Sesiones en el tiempo (área apilada con gradiente) */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <MetricLabel>Sesiones en el tiempo</MetricLabel>
+            <CardTitle className="text-xl tabular-nums">
+              412{" "}
+              <span className="align-middle text-sm text-muted-foreground">
+                —
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={sessionsChartConfig} className="h-56 w-full">
+              <AreaChart data={sessionsOverTime} accessibilityLayer>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  interval="preserveStartEnd"
+                />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <defs>
+                  <linearGradient id="fillSesiones" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-sesiones)"
+                      stopOpacity={0.5}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-sesiones)"
+                      stopOpacity={0.05}
+                    />
+                  </linearGradient>
+                  <linearGradient id="fillVisitantes" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-visitantes)"
+                      stopOpacity={0.5}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-visitantes)"
+                      stopOpacity={0.05}
+                    />
+                  </linearGradient>
+                </defs>
+                <Area
+                  dataKey="visitantes"
+                  type="natural"
+                  fill="url(#fillVisitantes)"
+                  stroke="var(--color-visitantes)"
+                  strokeWidth={2}
+                />
+                <Area
+                  dataKey="sesiones"
+                  type="natural"
+                  fill="url(#fillSesiones)"
+                  stroke="var(--color-sesiones)"
+                  strokeWidth={2}
+                />
+              </AreaChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+
         {/* Ventas por canal (dona) */}
         <Card>
           <CardHeader>
@@ -411,48 +521,6 @@ export function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Valor promedio de pedido */}
-        <Card>
-          <CardHeader>
-            <MetricLabel>Valor promedio del pedido</MetricLabel>
-            <CardTitle className="text-xl tabular-nums">
-              $201.84{" "}
-              <span className="align-middle text-sm text-muted-foreground">
-                —
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={periodChartConfig} className="h-40 w-full">
-              <LineChart data={aovOverTime} accessibilityLayer>
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="date"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Line
-                  dataKey="anterior"
-                  type="monotone"
-                  stroke="var(--color-anterior)"
-                  strokeWidth={2}
-                  dot={false}
-                />
-                <Line
-                  dataKey="actual"
-                  type="monotone"
-                  stroke="var(--color-actual)"
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
-            </ChartContainer>
-            <PeriodLegend />
-          </CardContent>
-        </Card>
-
         {/* Ventas por producto */}
         <Card>
           <CardHeader>
@@ -490,78 +558,8 @@ export function DashboardPage() {
             })}
           </CardContent>
         </Card>
-      </div>
 
-      {/* Más gráficas shadcn: área con gradiente, barras y radial de meta */}
-      <div className="grid gap-6 xl:grid-cols-3">
-        {/* Sesiones en el tiempo (área apilada con gradiente) */}
-        <Card>
-          <CardHeader>
-            <MetricLabel>Sesiones en el tiempo</MetricLabel>
-            <CardTitle className="text-xl tabular-nums">
-              412{" "}
-              <span className="align-middle text-sm text-muted-foreground">
-                —
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={sessionsChartConfig} className="h-44 w-full">
-              <AreaChart data={sessionsOverTime} accessibilityLayer>
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="date"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                  interval="preserveStartEnd"
-                />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <defs>
-                  <linearGradient id="fillSesiones" x1="0" y1="0" x2="0" y2="1">
-                    <stop
-                      offset="5%"
-                      stopColor="var(--color-sesiones)"
-                      stopOpacity={0.5}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor="var(--color-sesiones)"
-                      stopOpacity={0.05}
-                    />
-                  </linearGradient>
-                  <linearGradient id="fillVisitantes" x1="0" y1="0" x2="0" y2="1">
-                    <stop
-                      offset="5%"
-                      stopColor="var(--color-visitantes)"
-                      stopOpacity={0.5}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor="var(--color-visitantes)"
-                      stopOpacity={0.05}
-                    />
-                  </linearGradient>
-                </defs>
-                <Area
-                  dataKey="visitantes"
-                  type="natural"
-                  fill="url(#fillVisitantes)"
-                  stroke="var(--color-visitantes)"
-                  strokeWidth={2}
-                />
-                <Area
-                  dataKey="sesiones"
-                  type="natural"
-                  fill="url(#fillSesiones)"
-                  stroke="var(--color-sesiones)"
-                  strokeWidth={2}
-                />
-              </AreaChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
+        {/* Más gráficas shadcn: área con gradiente, barras y radial de meta */}
         {/* Pedidos por día (barras) */}
         <Card>
           <CardHeader>
@@ -662,6 +660,7 @@ export function DashboardPage() {
             </div>
           </CardContent>
         </Card>
+      </div>
       </div>
     </>
   )
