@@ -9,8 +9,6 @@ import {
   Plus,
   Search,
 } from "lucide-react"
-import { toast } from "sonner"
-
 import {
   formatCurrency,
   formatDate,
@@ -45,12 +43,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
 import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet"
@@ -476,62 +472,73 @@ export function DrawerDetailPage() {
           if (!open) setSelectedCustomer(null)
         }}
       >
-        <SheetContent className="w-full sm:max-w-md">
+        {/* Drawer flotante: márgenes a los lados y esquinas redondeadas.
+            Se sobrescribe la posición base con la MISMA variante data-[side=right] */}
+        <SheetContent className="gap-0 overflow-hidden rounded-xl p-0 data-[side=right]:inset-y-3 data-[side=right]:right-3 data-[side=right]:h-auto data-[side=right]:border data-[side=right]:sm:max-w-xl">
           {selectedCustomer && (
             <>
-              <SheetHeader>
-                <div className="flex items-center gap-3">
-                  <Avatar className="size-12">
-                    <AvatarFallback>
-                      {initials(selectedCustomer.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <SheetTitle>{selectedCustomer.name}</SheetTitle>
-                    <SheetDescription>
-                      Cliente desde octubre 2026
-                    </SheetDescription>
+              {/* Header con borde inferior: avatar + nombre + segmento */}
+              <SheetHeader className="flex-row items-center gap-3 border-b p-6 pr-12">
+                <Avatar className="size-11">
+                  <AvatarFallback>
+                    {initials(selectedCustomer.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <SheetTitle className="truncate">
+                      {selectedCustomer.name}
+                    </SheetTitle>
+                    {selectedCustomer.segment && (
+                      <Badge
+                        variant="secondary"
+                        className="shrink-0 bg-badge-neutral font-normal text-foreground capitalize"
+                      >
+                        {selectedCustomer.segment}
+                      </Badge>
+                    )}
                   </div>
+                  <SheetDescription>Cliente desde octubre 2026</SheetDescription>
                 </div>
               </SheetHeader>
 
-              <div className="flex-1 space-y-6 overflow-y-auto px-4">
+              <div className="flex-1 space-y-6 overflow-y-auto p-6">
                 {/* Resumen rápido */}
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-lg border p-3">
+                  <div className="space-y-1 rounded-lg border bg-muted/40 p-4">
                     <p className="text-xs text-muted-foreground">Pedidos</p>
-                    <p className="text-lg font-medium tabular-nums">
+                    <p className="text-2xl font-medium tabular-nums">
                       {selectedCustomer.orders.length}
                     </p>
                   </div>
-                  <div className="rounded-lg border p-3">
+                  <div className="space-y-1 rounded-lg border bg-muted/40 p-4">
                     <p className="text-xs text-muted-foreground">
                       Total gastado
                     </p>
-                    <p className="text-lg font-medium tabular-nums">
+                    <p className="text-2xl font-medium tabular-nums">
                       {formatCurrency(selectedCustomer.totalSpent)}
                     </p>
                   </div>
                 </div>
 
-                {/* Datos de contacto */}
-                <div className="space-y-2 text-sm">
-                  <h3 className="font-medium">Contacto</h3>
-                  <p className="flex items-center gap-2 text-muted-foreground">
-                    <Mail className="size-4" />
-                    {selectedCustomer.email}
-                  </p>
-                  <p className="flex items-center gap-2 text-muted-foreground">
-                    <Phone className="size-4" />
-                    +52 55 0000 0000
-                  </p>
-                  <p className="flex items-center gap-2 text-muted-foreground">
-                    <MapPin className="size-4" />
-                    {selectedCustomer.address}
-                  </p>
+                {/* Datos de contacto en tarjeta con divisores */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium">Contacto</h3>
+                  <div className="divide-y overflow-hidden rounded-lg border text-sm">
+                    <p className="flex items-center gap-3 px-4 py-3">
+                      <Mail className="size-4 shrink-0 text-muted-foreground" />
+                      <span className="truncate">{selectedCustomer.email}</span>
+                    </p>
+                    <p className="flex items-center gap-3 px-4 py-3">
+                      <Phone className="size-4 shrink-0 text-muted-foreground" />
+                      +52 55 0000 0000
+                    </p>
+                    <p className="flex items-center gap-3 px-4 py-3">
+                      <MapPin className="size-4 shrink-0 text-muted-foreground" />
+                      <span className="truncate">{selectedCustomer.address}</span>
+                    </p>
+                  </div>
                 </div>
-
-                <Separator />
 
                 {/* Pestañas de contenido secundario */}
                 <Tabs defaultValue="pedidos">
@@ -543,11 +550,11 @@ export function DrawerDetailPage() {
                       Actividad
                     </TabsTrigger>
                   </TabsList>
-                  <TabsContent value="pedidos" className="space-y-3 pt-2">
+                  <TabsContent value="pedidos" className="space-y-3 pt-3">
                     {selectedCustomer.orders.map((order) => (
                       <div
                         key={order.id}
-                        className="flex items-center justify-between rounded-lg border p-3 text-sm"
+                        className="flex items-center justify-between rounded-lg border p-3 text-sm transition-colors hover:bg-muted/50"
                       >
                         <div className="grid">
                           <span className="font-medium">{order.id}</span>
@@ -565,39 +572,27 @@ export function DrawerDetailPage() {
                       </div>
                     ))}
                   </TabsContent>
-                  <TabsContent value="actividad" className="space-y-3 pt-2">
-                    {[
-                      { label: "Pedido creado", date: "18 oct 2026" },
-                      { label: "Correo de bienvenida enviado", date: "17 oct 2026" },
-                      { label: "Cuenta creada", date: "16 oct 2026" },
-                    ].map((event) => (
-                      <div
-                        key={event.label}
-                        className="flex items-center justify-between text-sm"
-                      >
-                        <span>{event.label}</span>
-                        <Badge variant="secondary">{event.date}</Badge>
-                      </div>
-                    ))}
+                  <TabsContent value="actividad" className="pt-3">
+                    <div className="divide-y overflow-hidden rounded-lg border text-sm">
+                      {[
+                        { label: "Pedido creado", date: "18 oct 2026" },
+                        { label: "Correo de bienvenida enviado", date: "17 oct 2026" },
+                        { label: "Cuenta creada", date: "16 oct 2026" },
+                      ].map((event) => (
+                        <div
+                          key={event.label}
+                          className="flex items-center justify-between px-4 py-3"
+                        >
+                          <span>{event.label}</span>
+                          <span className="text-xs text-muted-foreground tabular-nums">
+                            {event.date}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </TabsContent>
                 </Tabs>
               </div>
-
-              <SheetFooter className="flex-row">
-                <Button
-                  className="flex-1"
-                  onClick={() => toast.info("Abrir edición del cliente")}
-                >
-                  Editar cliente
-                </Button>
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => toast.info("Creando pedido…")}
-                >
-                  Crear pedido
-                </Button>
-              </SheetFooter>
             </>
           )}
         </SheetContent>
