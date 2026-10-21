@@ -1,4 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   Archive,
   CalendarDays,
@@ -365,6 +366,7 @@ function OrderFormDialog({
 }
 
 export function TablePage() {
+  const navigate = useNavigate()
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("todos")
   const [channelFilter, setChannelFilter] = useState<Set<string>>(new Set())
@@ -507,7 +509,7 @@ export function TablePage() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button onClick={() => setOrderDialog({ open: true, order: null })}>
+        <Button onClick={() => navigate("/orders/new")}>
           <Plus data-icon="inline-start" />
           Crear pedido
         </Button>

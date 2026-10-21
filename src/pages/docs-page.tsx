@@ -108,7 +108,7 @@ export function DocsPage() {
             className="flex min-h-0 flex-1 flex-col"
           >
             <Card className="flex h-full min-h-0 flex-col gap-0 py-0">
-              <CardHeader className="shrink-0 flex-row items-center gap-4 border-b py-4 [.border-b]:pb-4">
+              <CardHeader className="shrink-0 flex-row items-center gap-4 py-4">
                 <div className="min-w-0 flex-1">
                   <CardTitle className="text-base">
                     {doc.title}{" "}

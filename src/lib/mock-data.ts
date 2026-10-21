@@ -324,6 +324,32 @@ export const notifications: AppNotification[] = [
   { id: "n8", kind: "mencion", title: "Diego te mencionó", description: "@ricardo ¿aprobamos el ajuste de inventario?", time: "17 oct 2026", unread: false, mention: true },
 ]
 
+// ── Creación de pedidos ───────────────────────────────────────────────────
+
+export const salesReps = [
+  "Laura Méndez",
+  "Pedro Ramos",
+  "Sofía Lara",
+  "Jorge Niño",
+  "Mónica Salas",
+]
+
+export const orderTypes: Record<string, string> = {
+  venta: "Venta",
+  cotizacion: "Cotización",
+  preventa: "Preventa",
+  devolucion: "Devolución",
+}
+
+export const saleTypes: Record<string, string> = {
+  contado: "Contado",
+  credito: "Crédito",
+  consignacion: "Consignación",
+}
+
+// Catálogo de clientes para el buscador (deriva de los pedidos existentes)
+export const customers = [...new Set(orders.map((o) => o.customer))].sort()
+
 export const formatCurrency = (value: number) =>
   new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(
     value

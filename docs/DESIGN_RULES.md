@@ -83,6 +83,10 @@ equipo antes de romperlas.
   - Texto secundario: `text-sm text-muted-foreground`
   - Metadatos / ayuda: `text-xs text-muted-foreground`
 - Números tabulares en cifras y dinero: agregar `tabular-nums`.
+- **Nunca** pongas un separador (`border-b`) en el `CardHeader` entre el título
+  y el contenido de una sección: título arriba, contenido abajo, sin línea
+  divisoria. El espaciado (`py-3`/`py-4`) basta. Esta regla aplica en todas las
+  cards de la app.
 
 ## 6. Color semántico
 

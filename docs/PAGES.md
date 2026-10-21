@@ -234,3 +234,30 @@ configurables, selección, sticky, paginación). Cada página solo define:
 
 **Recicla para:** cualquier listado nuevo (facturas, movimientos, usuarios…).
 Partir de una de estas tres páginas es el camino más corto para un listado.
+
+## 10. Crear pedido — `src/pages/create-order.tsx`
+
+**Receta (constructor de pedido, 2 columnas):** `PageActions` (Descartar con
+`AlertDialog` + Crear pedido) → grid `lg:grid-cols-3`:
+
+- Columna principal (2/3): card **Productos** (botón "Agregar producto" que
+  abre un `Dialog` **con estilo de tabla**: barra de búsqueda + `Select` de
+  filtro, `Table className="data-table"` con columnas checkbox / Producto /
+  Disponible (triángulo `text-warning` si 0) / Precio, selección múltiple
+  sincronizada con el carrito y footer "N seleccionados" + Cancelar / Agregar;
+  el `DialogFooter` necesita `mx-0 mb-0` porque su estilo base asume `p-4` en
+  el contenido). Cada línea del carrito: miniatura con borde, nombre (peso 400)
+  + SKU debajo, precio unitario en `text-primary`, cantidad editable, importe y
+  quitar; si el producto tiene 0 disponibles se muestra un banner de aviso
+  (`bg-badge-warning/25`) arriba de esa línea, y las líneas se separan con
+  `Separator`. Card **Pago** con subtotal, descuento, envío, IVA y total
+  calculados en vivo.
+- Columna lateral (1/3): card **Detalles del pedido** (Cliente como combobox
+  `Popover`+`Command`, Vendedor, Tipo de pedido, Vendedor secundario opcional,
+  Tipo de venta como `Select`) y card **Notas** (`Textarea`).
+
+El carrito y los totales se actualizan mientras se capturan los datos. Se
+abre desde el botón "Crear pedido" de Pedidos (`navigate("/orders/new")`).
+
+**Recicla para:** punto de venta, cotizador, cualquier constructor con
+catálogo + carrito + resumen.

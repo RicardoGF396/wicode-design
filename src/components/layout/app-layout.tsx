@@ -21,6 +21,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 const pages: Record<string, { title: string; icon: LucideIcon }> = {
   "/": { title: "Inicio", icon: Home },
   "/table": { title: "Pedidos", icon: ShoppingBag },
+  "/orders/new": { title: "Crear pedido", icon: ShoppingBag },
   "/drawer-detail": { title: "Clientes", icon: Users },
   "/accounts-payable": { title: "Cuentas por pagar", icon: ArrowUpFromLine },
   "/accounts-receivable": { title: "Cuentas por cobrar", icon: ArrowDownToLine },
