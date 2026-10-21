@@ -73,6 +73,21 @@ El sidebar tiene su propia familia de tokens (`--sidebar`, `--sidebar-foreground
 Cualquier cosa que se renderice dentro del sidebar usa exclusivamente estos
 tokens (`bg-sidebar-accent`, `text-sidebar-foreground/60`, etc.).
 
+### Color de la barra de navegación configurable
+
+El color del sidebar es configurable (cada cliente/proyecto designa el suyo).
+Se define en `src/index.css` como overrides keyed por `[data-nav]` (basta un
+bloque por color porque el sidebar es oscuro en ambos temas) y lo gestiona
+`nav-color-provider.tsx` (toggle de `data-nav` en `<html>`, persistido en
+localStorage). Colores: oscuro (default), pizarra, azul, verde, violeta, vino;
+cada uno redefine la familia `--sidebar*`. Se cambia de tres formas:
+
+- **Usuario:** Configuración → Apariencia → "Color de la barra de navegación".
+- **Desde código (proyecto):** `<NavColorProvider defaultNavColor="azul">` en
+  `main.tsx`, o fijando `data-nav="azul"` en `<html>` directamente.
+- **Color propio:** agrega un bloque `:root[data-nav="<marca>"]` en `index.css`
+  redefiniendo los tokens `--sidebar*`, y súmalo a `NAV_COLORS`.
+
 ## Radio
 
 `--radius: 0.625rem` genera `rounded-sm/md/lg/xl/…` por multiplicación.

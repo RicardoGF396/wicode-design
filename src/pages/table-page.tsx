@@ -766,7 +766,7 @@ export function TablePage() {
                       >
                         <MoreHorizontal />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent align="end" className="w-fit">
                         <DropdownMenuItem
                           onClick={() => setOrderDialog({ open: true, order })}
                         >

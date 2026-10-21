@@ -356,7 +356,7 @@ export function DataTableShell<T>({
                           >
                             <MoreHorizontal />
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
+                          <DropdownMenuContent align="end" className="w-fit">
                             {rowActions(row)}
                           </DropdownMenuContent>
                         </DropdownMenu>

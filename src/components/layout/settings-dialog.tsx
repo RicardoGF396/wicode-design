@@ -25,6 +25,7 @@ import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/components/theme-provider"
 import { ACCENTS, useAccent } from "@/components/accent-provider"
+import { NAV_COLORS, useNavColor } from "@/components/nav-color-provider"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -172,6 +173,7 @@ type SectionDef = {
 export function SettingsDialogContent() {
   const { theme, setTheme } = useTheme()
   const { accent, setAccent } = useAccent()
+  const { navColor, setNavColor } = useNavColor()
   const [active, setActive] = useState("general")
 
   // Estado local de ejemplo (en un proyecto real vendría de la API)
@@ -331,6 +333,34 @@ export function SettingsDialogContent() {
                     )}
                   >
                     {accent === option.value && (
+                      <Check className="size-4 text-white" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </Field>
+            <Field>
+              <FieldLabel>Color de la barra de navegación</FieldLabel>
+              <FieldDescription>
+                Color del sidebar; cada cliente puede designar el suyo.
+              </FieldDescription>
+              <div className="flex flex-wrap gap-2 pt-1">
+                {NAV_COLORS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    aria-label={option.label}
+                    aria-pressed={navColor === option.value}
+                    onClick={() => setNavColor(option.value)}
+                    style={{ background: option.swatch }}
+                    className={cn(
+                      "flex size-8 items-center justify-center rounded-full ring-offset-2 ring-offset-popover transition-shadow",
+                      navColor === option.value
+                        ? "ring-2 ring-ring"
+                        : "ring-1 ring-border hover:ring-foreground/30"
+                    )}
+                  >
+                    {navColor === option.value && (
                       <Check className="size-4 text-white" />
                     )}
                   </button>

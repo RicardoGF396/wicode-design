@@ -6,13 +6,12 @@ import {
   ChevronRight,
   Columns3,
   Download,
+  EllipsisVertical,
   Mail,
   MapPin,
   Phone,
   Plus,
   Search,
-  ShoppingBag,
-  Star,
   Tag,
 } from "lucide-react"
 import { Controller, useForm } from "react-hook-form"
@@ -49,6 +48,7 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -556,16 +556,38 @@ export function DrawerDetailPage() {
         <SheetContent className="gap-0 overflow-hidden rounded-xl p-0 data-[side=right]:inset-y-3 data-[side=right]:right-3 data-[side=right]:h-auto data-[side=right]:border data-[side=right]:sm:max-w-md">
           {selectedCustomer && (
             <div className="flex h-full flex-col overflow-y-auto">
-              {/* Barra superior: favorito a la izquierda; la X de cerrar la pinta el Sheet */}
+              {/* Barra superior: menú de acciones a la izquierda; la X de cerrar
+                  la pinta el propio SheetContent a la derecha */}
               <div className="flex items-center px-4 pt-4">
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  aria-label="Marcar como favorito"
-                  onClick={() => toast.success("Cliente marcado como favorito")}
-                >
-                  <Star />
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        aria-label="Acciones del cliente"
+                      />
+                    }
+                  >
+                    <EllipsisVertical />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-fit">
+                    <DropdownMenuItem onClick={() => toast.info("Crear pedido")}>
+                      <Plus />
+                      Crear pedido
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => toast.info("Enviar correo")}>
+                      <Mail />
+                      Enviar correo
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => toast.info("Archivar cliente")}
+                    >
+                      <Archive />
+                      Archivar cliente
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
 
               {/* Identidad centrada */}
@@ -606,7 +628,7 @@ export function DrawerDetailPage() {
                 </div>
               </div>
 
-              {/* Sección: Detalles */}
+              {/* Sección: Detalles — el ícono indica el campo; solo se muestra el valor */}
               <div className="mt-6">
                 <h3 className="px-6 pb-2 text-base font-medium">Detalles</h3>
                 <div className="divide-y border-y">
@@ -629,72 +651,57 @@ export function DrawerDetailPage() {
                   ].map((row) => (
                     <div
                       key={row.label}
+                      aria-label={row.label}
                       className="flex items-center gap-3 px-6 py-3 text-sm"
                     >
-                      <row.icon className="size-5 shrink-0 text-muted-foreground" />
-                      <span className="flex-1">{row.label}</span>
-                      <span className="min-w-0 truncate text-right text-muted-foreground">
-                        {row.value}
-                      </span>
+                      <row.icon
+                        aria-hidden
+                        className="size-4 shrink-0 text-muted-foreground"
+                      />
+                      <span className="min-w-0 truncate">{row.value}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Sección: Pedidos */}
-              <div className="mt-6">
-                <h3 className="px-6 pb-2 text-base font-medium">Pedidos</h3>
+              {/* Sección: Pedidos — tabla data-table con margen respecto a los bordes */}
+              <div className="mt-6 px-6 pb-6">
+                <h3 className="pb-2 text-base font-medium">Pedidos</h3>
                 {selectedCustomer.orders.length > 0 ? (
-                  <div className="divide-y border-y">
-                    {selectedCustomer.orders.map((order) => (
-                      <button
-                        key={order.id}
-                        type="button"
-                        className="flex w-full items-center gap-3 px-6 py-3 text-left text-sm transition-colors hover:bg-muted/50"
-                      >
-                        <ShoppingBag className="size-5 shrink-0 text-muted-foreground" />
-                        <div className="min-w-0 flex-1">
-                          <p className="font-medium">{order.id}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {formatDate(order.date)}
-                          </p>
-                        </div>
-                        <OrderStatusBadge status={order.status} />
-                        <span className="tabular-nums">
-                          {formatCurrency(order.total)}
-                        </span>
-                        <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
-                      </button>
-                    ))}
+                  <div className="overflow-hidden rounded-lg border">
+                    <Table className="data-table">
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="pl-3">Pedido</TableHead>
+                          <TableHead>Estado</TableHead>
+                          <TableHead className="pr-3 text-right">Total</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {selectedCustomer.orders.map((order) => (
+                          <TableRow key={order.id}>
+                            <TableCell className="pl-3">
+                              <p className="font-medium">{order.id}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {formatDate(order.date)}
+                              </p>
+                            </TableCell>
+                            <TableCell>
+                              <OrderStatusBadge status={order.status} />
+                            </TableCell>
+                            <TableCell className="pr-3 text-right tabular-nums">
+                              {formatCurrency(order.total)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </div>
                 ) : (
-                  <p className="border-y px-6 py-4 text-sm text-muted-foreground">
+                  <p className="rounded-lg border px-4 py-4 text-sm text-muted-foreground">
                     Este cliente aún no tiene pedidos.
                   </p>
                 )}
-              </div>
-
-              {/* Sección: Acciones */}
-              <div className="mt-6 pb-6">
-                <h3 className="px-6 pb-2 text-base font-medium">Acciones</h3>
-                <div className="divide-y border-y">
-                  {[
-                    { icon: Plus, label: "Crear pedido" },
-                    { icon: Mail, label: "Enviar correo" },
-                    { icon: Archive, label: "Archivar cliente" },
-                  ].map((row) => (
-                    <button
-                      key={row.label}
-                      type="button"
-                      onClick={() => toast.info(row.label)}
-                      className="flex w-full items-center gap-3 px-6 py-3 text-left text-sm transition-colors hover:bg-muted/50"
-                    >
-                      <row.icon className="size-5 shrink-0 text-muted-foreground" />
-                      <span className="flex-1">{row.label}</span>
-                      <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
-                    </button>
-                  ))}
-                </div>
               </div>
             </div>
           )}

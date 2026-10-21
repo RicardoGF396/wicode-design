@@ -303,6 +303,62 @@
   --ring: oklch(0.82 0.16 85);
 }
 
+/* ── Color de la barra de navegación (sidebar) ─────────────────────────────
+   Se activa con data-nav en <html>. Sin el atributo se usa el sidebar oscuro
+   neutral por defecto. El sidebar es oscuro en claro y oscuro, por eso basta
+   un bloque por color. Lo cambian el provider (nav-color-provider.tsx) y
+   Apariencia; desde código puedes fijar data-nav="azul" en <html>. */
+:root[data-nav="pizarra"] {
+  --sidebar: oklch(0.24 0.02 250);
+  --sidebar-foreground: oklch(0.88 0.01 250);
+  --sidebar-primary: oklch(0.985 0 0);
+  --sidebar-primary-foreground: oklch(0.24 0.02 250);
+  --sidebar-accent: oklch(0.32 0.025 250);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.6 0.05 250);
+}
+:root[data-nav="azul"] {
+  --sidebar: oklch(0.27 0.06 255);
+  --sidebar-foreground: oklch(0.9 0.03 255);
+  --sidebar-primary: oklch(0.985 0 0);
+  --sidebar-primary-foreground: oklch(0.27 0.06 255);
+  --sidebar-accent: oklch(0.35 0.07 255);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.62 0.13 255);
+}
+:root[data-nav="verde"] {
+  --sidebar: oklch(0.26 0.05 160);
+  --sidebar-foreground: oklch(0.9 0.03 160);
+  --sidebar-primary: oklch(0.985 0 0);
+  --sidebar-primary-foreground: oklch(0.26 0.05 160);
+  --sidebar-accent: oklch(0.34 0.06 160);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.6 0.12 160);
+}
+:root[data-nav="violeta"] {
+  --sidebar: oklch(0.26 0.07 285);
+  --sidebar-foreground: oklch(0.9 0.03 285);
+  --sidebar-primary: oklch(0.985 0 0);
+  --sidebar-primary-foreground: oklch(0.26 0.07 285);
+  --sidebar-accent: oklch(0.34 0.08 285);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.62 0.14 285);
+}
+:root[data-nav="vino"] {
+  --sidebar: oklch(0.27 0.07 20);
+  --sidebar-foreground: oklch(0.9 0.03 20);
+  --sidebar-primary: oklch(0.985 0 0);
+  --sidebar-primary-foreground: oklch(0.27 0.07 20);
+  --sidebar-accent: oklch(0.35 0.08 20);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.62 0.14 20);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
