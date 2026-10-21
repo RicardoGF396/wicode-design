@@ -7,6 +7,7 @@ import {
   BookOpen,
   Boxes,
   Cable,
+  CalendarDays,
   ChevronRight,
   FileText,
   Home,
@@ -63,6 +64,7 @@ import {
 const mainNav = [
   { title: "Inicio", url: "/", icon: Home },
   { title: "Pedidos", url: "/table", icon: ShoppingBag },
+  { title: "Calendario", url: "/calendar", icon: CalendarDays },
   { title: "Clientes", url: "/drawer-detail", icon: Users },
   { title: "Inventario", url: "/inventory", icon: Boxes },
   { title: "Formularios", url: "/forms", icon: FileText },

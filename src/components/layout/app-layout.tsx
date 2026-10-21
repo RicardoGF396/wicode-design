@@ -6,6 +6,7 @@ import {
   BookOpen,
   Boxes,
   Cable,
+  CalendarDays,
   FileText,
   Home,
   ShoppingBag,
@@ -21,6 +22,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 const pages: Record<string, { title: string; icon: LucideIcon }> = {
   "/": { title: "Inicio", icon: Home },
   "/table": { title: "Pedidos", icon: ShoppingBag },
+  "/calendar": { title: "Calendario", icon: CalendarDays },
   "/orders/new": { title: "Crear pedido", icon: ShoppingBag },
   "/drawer-detail": { title: "Clientes", icon: Users },
   "/accounts-payable": { title: "Cuentas por pagar", icon: ArrowUpFromLine },

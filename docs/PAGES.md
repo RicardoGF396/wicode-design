@@ -286,3 +286,30 @@ abre desde el botón "Crear pedido" de Pedidos (`navigate("/orders/new")`).
 
 **Recicla para:** punto de venta, cotizador, cualquier constructor con
 catálogo + carrito + resumen.
+
+## 11. Calendario — `src/pages/calendar-page.tsx`
+
+**Receta (vista mes con pedidos):** `PageActions` (Crear pedido) → una `Card`
+`min-h-0 flex-1 !shrink` que llena la altura, con: barra del mes (Hoy +
+chevrons `‹ ›` + título `MMMM yyyy`), encabezado de días (Dom–Sáb) y la
+rejilla del mes.
+
+- Fechas con `date-fns` (`startOfWeek`/`endOfWeek` con `weekStartsOn: 0`,
+  `eachDayOfInterval`, `isSameMonth`, `isSameDay`) y locale `es`; "hoy" es una
+  fecha fija (los datos demo viven en octubre 2026). Mayúscula inicial por JS
+  (`cap`), no `capitalize` (el mes/fecha en español llega en minúsculas).
+- La rejilla es `grid` de 7 columnas por **estilo inline**
+  (`gridTemplateColumns: repeat(7, …)`), no `grid-cols-7`: ese valor poco común
+  no siempre lo genera el JIT en dev. `auto-rows-fr` reparte la altura.
+- Cada día: número (hoy resaltado con `bg-primary` en círculo) y **máximo 2**
+  `OrderChip` (pastilla con `bg-badge-<tono>` según estado, mismo semáforo que
+  `StatusPill`). Si hay más, un botón "+N más" abre un `Popover` con TODOS los
+  pedidos de ese día.
+- Clic en un pedido (en la celda o en el popover) abre un `Dialog` con el
+  detalle (total, artículos, canal, entrega, destino, dirección, correo) +
+  `OrderStatusBadge`, con acción "Ver en Pedidos".
+- Los pedidos salen de `orders` (mock-data) agrupados por fecha ISO: mismos
+  datos que Pedidos/Clientes.
+
+**Recicla para:** agenda de citas, planificador de entregas, cualquier vista
+mensual con eventos por día.

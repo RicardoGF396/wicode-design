@@ -4,6 +4,7 @@ import { AppLayout } from "@/components/layout/app-layout"
 import { Toaster } from "@/components/ui/sonner"
 import { AccountsPayablePage } from "@/pages/accounts-payable"
 import { AccountsReceivablePage } from "@/pages/accounts-receivable"
+import { CalendarPage } from "@/pages/calendar-page"
 import { CreateOrderPage } from "@/pages/create-order"
 import { DashboardPage } from "@/pages/dashboard"
 import { DocsPage } from "@/pages/docs-page"
@@ -27,6 +28,7 @@ export function App() {
         <Route element={<AppLayout />}>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/table" element={<TablePage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/orders/new" element={<CreateOrderPage />} />
           <Route path="/drawer-detail" element={<DrawerDetailPage />} />
           <Route path="/accounts-payable" element={<AccountsPayablePage />} />
