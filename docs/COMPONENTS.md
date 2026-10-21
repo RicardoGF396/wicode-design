@@ -148,6 +148,13 @@ Las páginas de listado nuevas la consumen pasando `metrics`, `filterItems`,
 listado quedan en ~120 líneas y 100% consistentes. Lo usan Cuentas por pagar,
 Cuentas por cobrar e Inventario.
 
+El shell pinta el filtro por fecha (`PeriodFilter`,
+`components/data-table/period-filter.tsx`) en la primera celda de la franja de
+métricas; se configura con `periodItems` y `defaultPeriod`. Ese mismo
+`PeriodFilter` homologa el filtro por fecha en TODAS las páginas con métricas +
+tabla (`table-page`, `drawer-detail` y las tres del shell): siempre va en la
+primera celda (izquierda, con `border-r`) de la card de métricas.
+
 > Las páginas canónicas hechas a mano (`table-page.tsx`, `drawer-detail.tsx`)
 > se conservan como ejemplo legible de la receta; las nuevas usan el shell.
 

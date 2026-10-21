@@ -75,7 +75,7 @@ export function AccountsPayablePage() {
 
       <DataTableShell
         metrics={payableMetrics}
-        metricsLabel="Este mes"
+        defaultPeriod="mes"
         filterItems={filterItems}
         matchesFilter={(row, filter) => filter === "todos" || row.status === filter}
         matchesSearch={(row, query) =>

@@ -224,13 +224,29 @@ configuración de la página. El shell (`components/data-table/`) aporta toda la
 receta Table (métricas con sparkline, filtro integrado, columnas
 configurables, selección, sticky, paginación). Cada página solo define:
 
-- `metrics` y `metricsLabel`, `filterItems` + `matchesFilter`/`matchesSearch`.
+- `metrics`, `filterItems` + `matchesFilter`/`matchesSearch`.
+- Filtro por fecha: el shell pinta un `PeriodFilter` en la primera celda de la
+  franja de métricas (homologado con el resto de páginas con métricas + tabla).
+  Opcional: `periodItems` para cambiar las opciones y `defaultPeriod` para el
+  valor inicial (ej. `defaultPeriod="mes"` en pagar/cobrar).
 - `primaryHeader`/`primaryCell` (columna sticky, ej. Folio o Producto) y
   `columns` (`DataColumn<T>[]`).
 - `rows`, `getRowId`, `entityPlural` y `rowActions` (menú por fila con su
   `AlertDialog` de borrado).
 - Estado de negocio con el badge de dominio (`AccountStatusBadge`,
   `StockStatusBadge`) sobre `StatusPill` — vencido/agotado en tono `critical`.
+
+**Edición rápida en celda (Inventario):** las columnas pueden volverse
+editables desde su `cell`. Dos patrones listos:
+- **Estado** → `DropdownMenu` (clic normal, cursor pointer) con
+  `DropdownMenuRadioGroup` para cambiar el estatus de la fila. Los
+  `DropdownMenuRadioItem` llevan `closeOnClick` (el default de Base UI es no
+  cerrar), el `DropdownMenuLabel` va DENTRO del `RadioGroup` (Base UI exige un
+  grupo), y la página mantiene `rows` en estado.
+- **Costo unitario** → celda con `cellClass="relative p-0"` y un `<button
+  className="absolute inset-0 …">` que cubre toda la altura de la celda:
+  cursor pointer, `hover:bg-foreground/10` y un chevron que aparece en hover
+  (`group-hover/cost`); al hacer clic abre un `Dialog` para editar el valor.
 
 **Recicla para:** cualquier listado nuevo (facturas, movimientos, usuarios…).
 Partir de una de estas tres páginas es el camino más corto para un listado.

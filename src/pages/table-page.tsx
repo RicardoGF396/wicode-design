@@ -2,7 +2,6 @@ import { useMemo, useState, type ReactNode } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   Archive,
-  CalendarDays,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -36,6 +35,7 @@ import {
 import { cn } from "@/lib/utils"
 import { LoadingOverlay } from "@/components/layout/loading-overlay"
 import { PageActions } from "@/components/layout/page-actions"
+import { PeriodFilter } from "@/components/data-table/period-filter"
 import { Sparkline } from "@/components/dashboard/sparkline"
 import { OrderFulfillmentBadge } from "@/components/orders/order-fulfillment-badge"
 import { OrderStatusBadge } from "@/components/orders/order-status-badge"
@@ -207,13 +207,6 @@ const fulfillmentItems: Record<string, string> = {
   sin_preparar: fulfillmentLabel.sin_preparar,
   no_requerido: fulfillmentLabel.no_requerido,
 }
-const periodItems: Record<string, string> = {
-  hoy: "Hoy",
-  "7d": "Últimos 7 días",
-  "30d": "Últimos 30 días",
-  mes: "Este mes",
-}
-
 // Dialog para crear o editar un pedido. Se remonta por `key` para resetear.
 function OrderFormDialog({
   open,
@@ -519,28 +512,7 @@ export function TablePage() {
           chip de fecha, indicadores con subrayado punteado y sparkline */}
       <Card className="flex-row items-stretch gap-0 py-0">
         <div className="flex shrink-0 items-center border-r px-2">
-          <Select
-            items={periodItems}
-            value={period}
-            onValueChange={(v) => setPeriod(v ?? "hoy")}
-          >
-            <SelectTrigger
-              size="sm"
-              className="w-auto gap-1.5 border-0 bg-transparent font-medium text-foreground shadow-none focus-visible:ring-0 dark:bg-transparent"
-            >
-              <CalendarDays className="size-4 text-muted-foreground" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {Object.entries(periodItems).map(([v, label]) => (
-                  <SelectItem key={v} value={v}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <PeriodFilter value={period} onValueChange={setPeriod} />
         </div>
         {todayOrderMetrics.map((metric, index) => (
           <div

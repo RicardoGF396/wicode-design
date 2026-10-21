@@ -1,6 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react"
 import {
-  CalendarDays,
   ChevronLeft,
   ChevronRight,
   Columns3,
@@ -9,6 +8,10 @@ import {
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import {
+  PeriodFilter,
+  periodItems as periodItemsDefault,
+} from "@/components/data-table/period-filter"
 import { Sparkline } from "@/components/dashboard/sparkline"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -62,8 +65,10 @@ export type DataColumn<T> = {
 type DataTableShellProps<T> = {
   /** Franja de métricas del periodo */
   metrics: DataTableMetric[]
-  /** Chip de periodo a la izquierda de las métricas */
-  metricsLabel?: string
+  /** Opciones del filtro de periodo (clave → etiqueta) a la izquierda de las métricas */
+  periodItems?: Record<string, string>
+  /** Periodo seleccionado por defecto (clave de periodItems) */
+  defaultPeriod?: string
   /** Opciones del select de estado (clave → etiqueta); la primera es el default */
   filterItems: Record<string, string>
   matchesFilter: (row: T, filter: string) => boolean
@@ -97,7 +102,8 @@ const PAGE_SIZES: Record<string, string> = {
 // paginación con filas por página. Ver docs/PAGES.md.
 export function DataTableShell<T>({
   metrics,
-  metricsLabel = "Hoy",
+  periodItems = periodItemsDefault,
+  defaultPeriod,
   filterItems,
   matchesFilter,
   matchesSearch,
@@ -115,6 +121,9 @@ export function DataTableShell<T>({
 }: DataTableShellProps<T>) {
   const filterKeys = Object.keys(filterItems)
   const [filter, setFilter] = useState(filterKeys[0] ?? "todos")
+  const [period, setPeriod] = useState(
+    defaultPeriod ?? Object.keys(periodItems)[0]
+  )
   const [search, setSearch] = useState("")
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(25)
@@ -169,9 +178,12 @@ export function DataTableShell<T>({
     <>
       {/* Métricas del periodo: card segmentada con chip, label punteado y spark */}
       <Card className="flex-row items-stretch gap-0 py-0">
-        <div className="flex shrink-0 items-center gap-2 border-r px-5 text-sm">
-          <CalendarDays className="size-4 text-muted-foreground" />
-          {metricsLabel}
+        <div className="flex shrink-0 items-center border-r px-2">
+          <PeriodFilter
+            value={period}
+            onValueChange={setPeriod}
+            items={periodItems}
+          />
         </div>
         {metrics.map((metric, index) => (
           <div

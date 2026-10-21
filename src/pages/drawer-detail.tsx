@@ -1,6 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react"
 import {
-  CalendarDays,
   ChevronLeft,
   ChevronRight,
   Columns3,
@@ -20,6 +19,7 @@ import {
 } from "@/lib/mock-data"
 import { cn } from "@/lib/utils"
 import { PageActions } from "@/components/layout/page-actions"
+import { PeriodFilter } from "@/components/data-table/period-filter"
 import { Sparkline } from "@/components/dashboard/sparkline"
 import { OrderStatusBadge } from "@/components/orders/order-status-badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -172,6 +172,7 @@ export function DrawerDetailPage() {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
   const [search, setSearch] = useState("")
   const [segment, setSegment] = useState("todos")
+  const [period, setPeriod] = useState("30d")
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(25)
   const [checked, setChecked] = useState<Set<string>>(new Set())
@@ -244,9 +245,8 @@ export function DrawerDetailPage() {
 
       {/* Métricas del periodo (mismo patrón que Pedidos) */}
       <Card className="flex-row items-stretch gap-0 py-0">
-        <div className="flex shrink-0 items-center gap-2 border-r px-5 text-sm">
-          <CalendarDays className="size-4 text-muted-foreground" />
-          Últimos 30 días
+        <div className="flex shrink-0 items-center border-r px-2">
+          <PeriodFilter value={period} onValueChange={setPeriod} />
         </div>
         {customerMetrics.map((metric, index) => (
           <div
