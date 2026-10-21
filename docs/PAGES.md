@@ -109,16 +109,25 @@ configurables, selección, pie con filas por página y paginación) + filas
   `onOpenChange` que limpia al cerrar. Nunca un Sheet por fila.
 - Ancho y posición: `SheetContent` flotante con márgenes y esquinas
   redondeadas — `data-[side=right]:inset-y-3 data-[side=right]:right-3
-  data-[side=right]:h-auto data-[side=right]:border data-[side=right]:sm:max-w-xl`
+  data-[side=right]:h-auto data-[side=right]:border data-[side=right]:sm:max-w-md`
   + `rounded-xl overflow-hidden`. Clave: el componente base pinta la posición
   y el ancho con la variante `data-[side=right]:` (inset-y-0, right-0, h-full,
   sm:max-w-sm); para sobrescribirlos hay que usar la MISMA variante, o
   tailwind-merge conserva ambos y gana el del componente.
-- Estructura homologada a shadcn: `SheetContent` con `gap-0 p-0`; header con
-  `border-b p-6` (avatar + título/subtítulo + badge de segmento, `pr-12` para
-  librar el botón de cerrar); cuerpo `flex-1 overflow-y-auto p-6 space-y-6`
-  (stats en grid de 2 con `bg-muted/40`, contacto en tarjeta con `divide-y`,
-  `Tabs`). Sin footer de acciones.
+- Estructura (estilo ficha centrada): barra superior con acción a la izquierda
+  (`Star`) — la X de cerrar la pinta el propio `SheetContent`; `SheetHeader`
+  centrado (`items-center text-center`) con avatar grande
+  (`AvatarFallback` en `bg-primary text-primary-foreground`), nombre
+  (`text-xl`) y un enlace de acento (`text-primary`); dos tarjetas de métricas
+  en grid de 2; y secciones (`Detalles`, `Pedidos`, `Acciones`), cada una con
+  título `text-base font-medium` y filas con ícono + etiqueta + valor/chevron
+  separadas por `divide-y border-y`. Las filas de acción son `<button>` con
+  `hover:bg-muted/50`.
+- Alta de registro: la primaria "Agregar cliente" abre un `Dialog` con
+  formulario `react-hook-form` + `zod` (`Field`/`FieldLabel`/`FieldError`,
+  `Controller` para el `Select`); al enviar se antepone a una lista en estado
+  que se fusiona con los derivados (`[...addedCustomers, ...derivedCustomers]`)
+  y `toast` de confirmación.
 
 **Recicla para:** detalle de pedido, ficha de usuario, panel de configuración
 contextual, preview de registro.

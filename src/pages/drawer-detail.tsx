@@ -1,5 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
 import {
+  Archive,
   ChevronLeft,
   ChevronRight,
   Columns3,
@@ -9,7 +11,14 @@ import {
   Phone,
   Plus,
   Search,
+  ShoppingBag,
+  Star,
+  Tag,
 } from "lucide-react"
+import { Controller, useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
+
 import {
   formatCurrency,
   formatDate,
@@ -28,6 +37,14 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -36,6 +53,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty"
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -60,7 +83,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Tooltip,
   TooltipContent,
@@ -90,6 +112,22 @@ const segmentItems: Record<string, string> = {
   mayoreo: "Mayoreo",
   frágil: "Frágil",
 }
+
+// Segmentos seleccionables al dar de alta un cliente (sin la opción "Todos")
+const customerSegments: Record<string, string> = {
+  vip: "VIP",
+  mayoreo: "Mayoreo",
+  frágil: "Frágil",
+}
+
+// Alta de cliente: nombre y correo obligatorios; dirección y segmento opcionales
+const customerFormSchema = z.object({
+  name: z.string().min(2, "El nombre es obligatorio"),
+  email: z.email("Correo inválido"),
+  address: z.string().optional(),
+  segment: z.string(),
+})
+type CustomerFormValues = z.infer<typeof customerFormSchema>
 
 const pageSizeItems: Record<string, string> = {
   "10": "10",
@@ -147,7 +185,7 @@ const columns: ColumnDef[] = [
 ]
 
 export function DrawerDetailPage() {
-  const customers = useMemo<Customer[]>(() => {
+  const derivedCustomers = useMemo<Customer[]>(() => {
     const byEmail = new Map<string, Customer>()
     for (const order of orders) {
       const existing = byEmail.get(order.email)
@@ -168,6 +206,37 @@ export function DrawerDetailPage() {
     }
     return [...byEmail.values()].sort((a, b) => b.totalSpent - a.totalSpent)
   }, [])
+
+  // Clientes dados de alta en la sesión (modal). Se muestran primero.
+  const [addedCustomers, setAddedCustomers] = useState<Customer[]>([])
+  const customers = useMemo(
+    () => [...addedCustomers, ...derivedCustomers],
+    [addedCustomers, derivedCustomers]
+  )
+
+  const [addOpen, setAddOpen] = useState(false)
+  const addForm = useForm<CustomerFormValues>({
+    resolver: zodResolver(customerFormSchema),
+    defaultValues: { name: "", email: "", address: "", segment: "" },
+  })
+  const addErrors = addForm.formState.errors
+
+  const onAddCustomer = (values: CustomerFormValues) => {
+    setAddedCustomers((prev) => [
+      {
+        name: values.name,
+        email: values.email,
+        address: values.address ?? "",
+        segment: values.segment,
+        orders: [],
+        totalSpent: 0,
+      },
+      ...prev,
+    ])
+    toast.success(`Cliente "${values.name}" agregado`)
+    setAddOpen(false)
+    addForm.reset()
+  }
 
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
   const [search, setSearch] = useState("")
@@ -237,7 +306,7 @@ export function DrawerDetailPage() {
           <Download data-icon="inline-start" />
           Exportar
         </Button>
-        <Button>
+        <Button onClick={() => setAddOpen(true)}>
           <Plus data-icon="inline-start" />
           Agregar cliente
         </Button>
@@ -484,129 +553,247 @@ export function DrawerDetailPage() {
       >
         {/* Drawer flotante: márgenes a los lados y esquinas redondeadas.
             Se sobrescribe la posición base con la MISMA variante data-[side=right] */}
-        <SheetContent className="gap-0 overflow-hidden rounded-xl p-0 data-[side=right]:inset-y-3 data-[side=right]:right-3 data-[side=right]:h-auto data-[side=right]:border data-[side=right]:sm:max-w-xl">
+        <SheetContent className="gap-0 overflow-hidden rounded-xl p-0 data-[side=right]:inset-y-3 data-[side=right]:right-3 data-[side=right]:h-auto data-[side=right]:border data-[side=right]:sm:max-w-md">
           {selectedCustomer && (
-            <>
-              {/* Header con borde inferior: avatar + nombre + segmento */}
-              <SheetHeader className="flex-row items-center gap-3 border-b p-6 pr-12">
-                <Avatar className="size-11">
-                  <AvatarFallback>
+            <div className="flex h-full flex-col overflow-y-auto">
+              {/* Barra superior: favorito a la izquierda; la X de cerrar la pinta el Sheet */}
+              <div className="flex items-center px-4 pt-4">
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label="Marcar como favorito"
+                  onClick={() => toast.success("Cliente marcado como favorito")}
+                >
+                  <Star />
+                </Button>
+              </div>
+
+              {/* Identidad centrada */}
+              <SheetHeader className="items-center gap-0 border-0 px-6 pt-1 pb-6 text-center">
+                <Avatar className="size-16">
+                  <AvatarFallback className="bg-primary text-lg text-primary-foreground">
                     {initials(selectedCustomer.name)}
                   </AvatarFallback>
                 </Avatar>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <SheetTitle className="truncate">
-                      {selectedCustomer.name}
-                    </SheetTitle>
-                    {selectedCustomer.segment && (
-                      <Badge
-                        variant="secondary"
-                        className="shrink-0 bg-badge-neutral font-normal text-foreground capitalize"
-                      >
-                        {selectedCustomer.segment}
-                      </Badge>
-                    )}
-                  </div>
-                  <SheetDescription>Cliente desde octubre 2026</SheetDescription>
-                </div>
+                <SheetTitle className="mt-3 text-xl">
+                  {selectedCustomer.name}
+                </SheetTitle>
+                <SheetDescription className="sr-only">
+                  Detalle del cliente {selectedCustomer.name}
+                </SheetDescription>
+                <button
+                  type="button"
+                  onClick={() => toast.info(`Editar ${selectedCustomer.name}`)}
+                  className="mt-1 text-sm font-medium text-primary hover:underline"
+                >
+                  Editar información
+                </button>
               </SheetHeader>
 
-              <div className="flex-1 space-y-6 overflow-y-auto p-6">
-                {/* Resumen rápido */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1 rounded-lg border bg-muted/40 p-4">
-                    <p className="text-xs text-muted-foreground">Pedidos</p>
-                    <p className="text-2xl font-medium tabular-nums">
-                      {selectedCustomer.orders.length}
-                    </p>
-                  </div>
-                  <div className="space-y-1 rounded-lg border bg-muted/40 p-4">
-                    <p className="text-xs text-muted-foreground">
-                      Total gastado
-                    </p>
-                    <p className="text-2xl font-medium tabular-nums">
-                      {formatCurrency(selectedCustomer.totalSpent)}
-                    </p>
-                  </div>
+              {/* Métricas 2-up */}
+              <div className="grid grid-cols-2 gap-3 px-6">
+                <div className="rounded-xl border p-4">
+                  <p className="text-sm text-muted-foreground">Total gastado</p>
+                  <p className="text-lg font-medium tabular-nums">
+                    {formatCurrency(selectedCustomer.totalSpent)}
+                  </p>
                 </div>
-
-                {/* Datos de contacto en tarjeta con divisores */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-medium">Contacto</h3>
-                  <div className="divide-y overflow-hidden rounded-lg border text-sm">
-                    <p className="flex items-center gap-3 px-4 py-3">
-                      <Mail className="size-4 shrink-0 text-muted-foreground" />
-                      <span className="truncate">{selectedCustomer.email}</span>
-                    </p>
-                    <p className="flex items-center gap-3 px-4 py-3">
-                      <Phone className="size-4 shrink-0 text-muted-foreground" />
-                      +52 55 0000 0000
-                    </p>
-                    <p className="flex items-center gap-3 px-4 py-3">
-                      <MapPin className="size-4 shrink-0 text-muted-foreground" />
-                      <span className="truncate">{selectedCustomer.address}</span>
-                    </p>
-                  </div>
+                <div className="rounded-xl border p-4">
+                  <p className="text-sm text-muted-foreground">Pedidos</p>
+                  <p className="text-lg font-medium tabular-nums">
+                    {selectedCustomer.orders.length}
+                  </p>
                 </div>
-
-                {/* Pestañas de contenido secundario */}
-                <Tabs defaultValue="pedidos">
-                  <TabsList className="w-full">
-                    <TabsTrigger value="pedidos" className="flex-1">
-                      Pedidos
-                    </TabsTrigger>
-                    <TabsTrigger value="actividad" className="flex-1">
-                      Actividad
-                    </TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="pedidos" className="space-y-3 pt-3">
-                    {selectedCustomer.orders.map((order) => (
-                      <div
-                        key={order.id}
-                        className="flex items-center justify-between rounded-lg border p-3 text-sm transition-colors hover:bg-muted/50"
-                      >
-                        <div className="grid">
-                          <span className="font-medium">{order.id}</span>
-                          <span className="text-xs text-muted-foreground">
-                            {formatDate(order.date)} · {order.items}{" "}
-                            {order.items === 1 ? "artículo" : "artículos"}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <OrderStatusBadge status={order.status} />
-                          <span className="font-medium tabular-nums">
-                            {formatCurrency(order.total)}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </TabsContent>
-                  <TabsContent value="actividad" className="pt-3">
-                    <div className="divide-y overflow-hidden rounded-lg border text-sm">
-                      {[
-                        { label: "Pedido creado", date: "18 oct 2026" },
-                        { label: "Correo de bienvenida enviado", date: "17 oct 2026" },
-                        { label: "Cuenta creada", date: "16 oct 2026" },
-                      ].map((event) => (
-                        <div
-                          key={event.label}
-                          className="flex items-center justify-between px-4 py-3"
-                        >
-                          <span>{event.label}</span>
-                          <span className="text-xs text-muted-foreground tabular-nums">
-                            {event.date}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </TabsContent>
-                </Tabs>
               </div>
-            </>
+
+              {/* Sección: Detalles */}
+              <div className="mt-6">
+                <h3 className="px-6 pb-2 text-base font-medium">Detalles</h3>
+                <div className="divide-y border-y">
+                  {[
+                    { icon: Mail, label: "Correo", value: selectedCustomer.email },
+                    { icon: Phone, label: "Teléfono", value: "+52 55 0000 0000" },
+                    {
+                      icon: MapPin,
+                      label: "Dirección",
+                      value: selectedCustomer.address || "—",
+                    },
+                    {
+                      icon: Tag,
+                      label: "Segmento",
+                      value: selectedCustomer.segment
+                        ? customerSegments[selectedCustomer.segment] ??
+                          selectedCustomer.segment
+                        : "Sin segmento",
+                    },
+                  ].map((row) => (
+                    <div
+                      key={row.label}
+                      className="flex items-center gap-3 px-6 py-3 text-sm"
+                    >
+                      <row.icon className="size-5 shrink-0 text-muted-foreground" />
+                      <span className="flex-1">{row.label}</span>
+                      <span className="min-w-0 truncate text-right text-muted-foreground">
+                        {row.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Sección: Pedidos */}
+              <div className="mt-6">
+                <h3 className="px-6 pb-2 text-base font-medium">Pedidos</h3>
+                {selectedCustomer.orders.length > 0 ? (
+                  <div className="divide-y border-y">
+                    {selectedCustomer.orders.map((order) => (
+                      <button
+                        key={order.id}
+                        type="button"
+                        className="flex w-full items-center gap-3 px-6 py-3 text-left text-sm transition-colors hover:bg-muted/50"
+                      >
+                        <ShoppingBag className="size-5 shrink-0 text-muted-foreground" />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium">{order.id}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {formatDate(order.date)}
+                          </p>
+                        </div>
+                        <OrderStatusBadge status={order.status} />
+                        <span className="tabular-nums">
+                          {formatCurrency(order.total)}
+                        </span>
+                        <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="border-y px-6 py-4 text-sm text-muted-foreground">
+                    Este cliente aún no tiene pedidos.
+                  </p>
+                )}
+              </div>
+
+              {/* Sección: Acciones */}
+              <div className="mt-6 pb-6">
+                <h3 className="px-6 pb-2 text-base font-medium">Acciones</h3>
+                <div className="divide-y border-y">
+                  {[
+                    { icon: Plus, label: "Crear pedido" },
+                    { icon: Mail, label: "Enviar correo" },
+                    { icon: Archive, label: "Archivar cliente" },
+                  ].map((row) => (
+                    <button
+                      key={row.label}
+                      type="button"
+                      onClick={() => toast.info(row.label)}
+                      className="flex w-full items-center gap-3 px-6 py-3 text-left text-sm transition-colors hover:bg-muted/50"
+                    >
+                      <row.icon className="size-5 shrink-0 text-muted-foreground" />
+                      <span className="flex-1">{row.label}</span>
+                      <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           )}
         </SheetContent>
       </Sheet>
+
+      {/* Modal: alta de cliente (react-hook-form + zod) */}
+      <Dialog
+        open={addOpen}
+        onOpenChange={(open) => {
+          setAddOpen(open)
+          if (!open) addForm.reset()
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Agregar cliente</DialogTitle>
+            <DialogDescription>
+              Registra un nuevo cliente en tu directorio.
+            </DialogDescription>
+          </DialogHeader>
+          <form
+            id="add-customer-form"
+            onSubmit={addForm.handleSubmit(onAddCustomer)}
+            noValidate
+          >
+            <FieldGroup>
+              <Field data-invalid={!!addErrors.name || undefined}>
+                <FieldLabel htmlFor="customer-name">Nombre</FieldLabel>
+                <Input
+                  id="customer-name"
+                  placeholder="María González"
+                  aria-invalid={!!addErrors.name}
+                  {...addForm.register("name")}
+                />
+                <FieldError errors={addErrors.name ? [addErrors.name] : undefined} />
+              </Field>
+              <Field data-invalid={!!addErrors.email || undefined}>
+                <FieldLabel htmlFor="customer-email">Correo</FieldLabel>
+                <Input
+                  id="customer-email"
+                  type="email"
+                  placeholder="maria@example.com"
+                  aria-invalid={!!addErrors.email}
+                  {...addForm.register("email")}
+                />
+                <FieldError
+                  errors={addErrors.email ? [addErrors.email] : undefined}
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="customer-address">
+                  Dirección (opcional)
+                </FieldLabel>
+                <Input
+                  id="customer-address"
+                  placeholder="Av. Reforma 123, CDMX"
+                  {...addForm.register("address")}
+                />
+              </Field>
+              <Field>
+                <FieldLabel>Segmento</FieldLabel>
+                <Controller
+                  control={addForm.control}
+                  name="segment"
+                  render={({ field }) => (
+                    <Select
+                      items={customerSegments}
+                      value={field.value || null}
+                      onValueChange={(v) => field.onChange(v ?? "")}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sin segmento" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {Object.entries(customerSegments).map(([v, label]) => (
+                            <SelectItem key={v} value={v}>
+                              {label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </Field>
+            </FieldGroup>
+          </form>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAddOpen(false)}>
+              Cancelar
+            </Button>
+            <Button type="submit" form="add-customer-form">
+              Agregar cliente
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
