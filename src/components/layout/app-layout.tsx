@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Outlet, useLocation } from "react-router-dom"
 import {
   ArrowDownToLine,
@@ -15,6 +15,7 @@ import {
 
 import { AppSidebar } from "@/components/layout/app-sidebar"
 import { PageActionsProvider } from "@/components/layout/page-actions"
+import { pushRecentPage } from "@/lib/recent-pages"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
 const pages: Record<string, { title: string; icon: LucideIcon }> = {
@@ -34,6 +35,11 @@ export function AppLayout() {
   const page = pages[location.pathname] ?? { title: "Página", icon: Home }
   const PageIcon = page.icon
   const [actionsSlot, setActionsSlot] = useState<HTMLElement | null>(null)
+
+  // Registra la página visitada para "Recientes" del buscador global
+  useEffect(() => {
+    pushRecentPage(location.pathname)
+  }, [location.pathname])
 
   return (
     <SidebarProvider>

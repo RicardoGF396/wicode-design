@@ -24,6 +24,7 @@ import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/components/theme-provider"
+import { ACCENTS, useAccent } from "@/components/accent-provider"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -170,6 +171,7 @@ type SectionDef = {
 
 export function SettingsDialogContent() {
   const { theme, setTheme } = useTheme()
+  const { accent, setAccent } = useAccent()
   const [active, setActive] = useState("general")
 
   // Estado local de ejemplo (en un proyecto real vendría de la API)
@@ -306,6 +308,34 @@ export function SettingsDialogContent() {
                   </label>
                 ))}
               </RadioGroup>
+            </Field>
+            <Field>
+              <FieldLabel>Color principal</FieldLabel>
+              <FieldDescription>
+                Acento de botones, enlaces y estados activos.
+              </FieldDescription>
+              <div className="flex flex-wrap gap-2 pt-1">
+                {ACCENTS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    aria-label={option.label}
+                    aria-pressed={accent === option.value}
+                    onClick={() => setAccent(option.value)}
+                    style={{ background: option.swatch }}
+                    className={cn(
+                      "flex size-8 items-center justify-center rounded-full ring-offset-2 ring-offset-popover transition-shadow",
+                      accent === option.value
+                        ? "ring-2 ring-ring"
+                        : "ring-1 ring-border hover:ring-foreground/30"
+                    )}
+                  >
+                    {accent === option.value && (
+                      <Check className="size-4 text-white" />
+                    )}
+                  </button>
+                ))}
+              </div>
             </Field>
             <FieldSeparator />
             <SettingRow
@@ -879,7 +909,7 @@ export function SettingsDialogContent() {
   const current = sections.find((s) => s.key === active) ?? sections[0]
 
   return (
-    <DialogContent className="flex h-[82vh] max-h-[560px] w-full flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl">
+    <DialogContent className="flex h-[82vh] max-h-140 w-full flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl">
       <DialogTitle className="sr-only">Configuración · {current.label}</DialogTitle>
       <DialogDescription className="sr-only">
         Ajustes de la tienda organizados por sección.

@@ -20,6 +20,7 @@ import {
 } from "lucide-react"
 
 import { WicodeLogo, WicodeMark } from "@/components/brand/wicode-logo"
+import { GlobalSearch } from "@/components/layout/global-search"
 import { NotificationsPanel } from "@/components/layout/notifications-panel"
 import { SettingsDialogContent } from "@/components/layout/settings-dialog"
 import { Dialog, DialogTrigger } from "@/components/ui/dialog"
@@ -48,7 +49,6 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarInput,
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,
@@ -87,6 +87,7 @@ const salesChannels = [
 export function AppSidebar() {
   const location = useLocation()
   const [notifOpen, setNotifOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
 
   // Cierra el panel de notificaciones al navegar a otra ruta
   useEffect(() => {
@@ -112,17 +113,18 @@ export function AppSidebar() {
             <SidebarTrigger className="text-sidebar-foreground/70 group-data-[collapsible=icon]:hidden hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
           </SidebarMenuItem>
         </SidebarMenu>
-        {/* Buscador tipo pill: relleno gris, sin borde, atajo a la derecha */}
-        <div className="relative group-data-[collapsible=icon]:hidden">
-          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-sidebar-foreground/50" />
-          <SidebarInput
-            placeholder="Buscar"
-            className="h-9 rounded-full border-0 bg-sidebar-accent/70 pr-12 pl-9 shadow-none placeholder:text-sidebar-foreground/50 focus-visible:ring-1 focus-visible:ring-sidebar-ring dark:bg-sidebar-accent/70"
-          />
-          <Kbd className="absolute top-1/2 right-3 -translate-y-1/2 border-none bg-transparent text-sidebar-foreground/50">
+        {/* Buscador: botón que abre la paleta de comandos (⌘K) */}
+        <button
+          type="button"
+          onClick={() => setSearchOpen(true)}
+          className="relative flex h-9 w-full items-center rounded-full bg-sidebar-accent/70 pr-3 pl-9 text-left text-sm text-sidebar-foreground/50 transition-colors hover:text-sidebar-foreground/80 group-data-[collapsible=icon]:hidden"
+        >
+          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+          Buscar
+          <Kbd className="ml-auto border-none bg-transparent text-sidebar-foreground/50">
             ⌘K
           </Kbd>
-        </div>
+        </button>
       </SidebarHeader>
 
       <SidebarContent>
@@ -296,6 +298,7 @@ export function AppSidebar() {
       <SidebarRail />
     </Sidebar>
     <NotificationsPanel open={notifOpen} onOpenChange={setNotifOpen} />
+    <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
     </>
   )
 }

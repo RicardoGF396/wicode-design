@@ -76,6 +76,15 @@ tokens (`bg-sidebar-accent`, `text-sidebar-foreground/60`, etc.).
 ## Radio
 
 `--radius: 0.625rem` genera `rounded-sm/md/lg/xl/…` por multiplicación.
+### Color de acento configurable
+
+El usuario puede cambiar `--primary` desde Configuración → Apariencia. Los
+acentos se definen en `src/index.css` como overrides keyed por `[data-accent]`
+(claro y oscuro) y los gestiona `accent-provider.tsx` (toggle de
+`data-accent` en `<html>`, persistido en localStorage). Acentos: neutral
+(default), azul, verde, violeta, rosa, naranja, ámbar. Cada uno redefine
+`--primary`, `--primary-foreground` y `--ring`.
+
 Para cambiar la personalidad de un proyecto completo basta con ajustar
 `--radius`; nunca valores por componente.
 

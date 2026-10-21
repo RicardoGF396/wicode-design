@@ -99,6 +99,16 @@ Excepciones vigentes a "no editar `ui/`", decididas para este sistema:
   encabezado la pone `data-table` con una sombra en los `th` (una sola línea,
   compatible con encabezado sticky).
 
+## GlobalSearch (paleta de comandos)
+
+`src/components/layout/global-search.tsx` es el buscador global (⌘K):
+`CommandDialog` con grupos "Recientes" (de `lib/recent-pages.ts`, poblado por
+`AppLayout` al navegar) y las páginas por sección. **Gotcha:** el
+`CommandDialog` de este proyecto NO envuelve a sus hijos en `<Command>`, así
+que hay que envolver `CommandInput`+`CommandList` en `<Command>` manualmente
+o cmdk crashea (`undefined.subscribe`). Se abre desde el botón de búsqueda del
+sidebar (`searchOpen` en `AppSidebar`).
+
 ## SettingsDialog (modal de configuración)
 
 `src/components/layout/settings-dialog.tsx` exporta `SettingsDialogContent`:

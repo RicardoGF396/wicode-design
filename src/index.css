@@ -238,6 +238,71 @@
   }
 }
 
+/* ── Color de acento configurable ──────────────────────────────────────────
+   Se activa con data-accent en <html>. Sin el atributo, se usa el primary
+   neutral por defecto. Cada acento define primary + foreground + ring en
+   claro y oscuro. El provider (accent-provider.tsx) y Apariencia lo cambian. */
+:root[data-accent="azul"] {
+  --primary: oklch(0.546 0.2 262);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.6 0.18 262);
+}
+.dark[data-accent="azul"] {
+  --primary: oklch(0.62 0.19 260);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.62 0.19 260);
+}
+:root[data-accent="verde"] {
+  --primary: oklch(0.52 0.15 150);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.58 0.15 150);
+}
+.dark[data-accent="verde"] {
+  --primary: oklch(0.7 0.17 162);
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.7 0.17 162);
+}
+:root[data-accent="violeta"] {
+  --primary: oklch(0.51 0.23 277);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.58 0.2 277);
+}
+.dark[data-accent="violeta"] {
+  --primary: oklch(0.62 0.2 277);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.62 0.2 277);
+}
+:root[data-accent="rosa"] {
+  --primary: oklch(0.58 0.22 15);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.63 0.2 15);
+}
+.dark[data-accent="rosa"] {
+  --primary: oklch(0.65 0.2 15);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.65 0.2 15);
+}
+:root[data-accent="naranja"] {
+  --primary: oklch(0.65 0.18 50);
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.7 0.17 50);
+}
+.dark[data-accent="naranja"] {
+  --primary: oklch(0.72 0.17 55);
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.72 0.17 55);
+}
+:root[data-accent="ambar"] {
+  --primary: oklch(0.76 0.16 85);
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.8 0.15 85);
+}
+.dark[data-accent="ambar"] {
+  --primary: oklch(0.82 0.16 85);
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.82 0.16 85);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
