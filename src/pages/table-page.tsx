@@ -8,6 +8,7 @@ import {
   Columns3,
   Copy,
   Download,
+  ListFilter,
   MoreHorizontal,
   Pencil,
   Plus,
@@ -16,18 +17,23 @@ import {
   Tags,
   Trash2,
   Upload,
+  X,
 } from "lucide-react"
 import { toast } from "sonner"
 
 import {
+  fulfillmentLabel,
   formatCurrency,
   formatDate,
   orders,
+  orderStatusLabel,
   todayOrderMetrics,
+  type FulfillmentStatus,
   type Order,
   type OrderStatus,
 } from "@/lib/mock-data"
 import { cn } from "@/lib/utils"
+import { LoadingOverlay } from "@/components/layout/loading-overlay"
 import { PageActions } from "@/components/layout/page-actions"
 import { Sparkline } from "@/components/dashboard/sparkline"
 import { OrderFulfillmentBadge } from "@/components/orders/order-fulfillment-badge"
@@ -57,8 +63,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty"
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Separator } from "@/components/ui/separator"
 import {
   Select,
   SelectContent,
@@ -156,13 +188,227 @@ const columns: ColumnDef[] = [
   },
 ]
 
+const channelOptions = [
+  "Tienda en línea",
+  "Punto de venta",
+  "Instagram",
+  "Facebook",
+]
+
+const statusItems: Record<string, string> = {
+  pagado: orderStatusLabel.pagado,
+  pendiente: orderStatusLabel.pendiente,
+  enviado: orderStatusLabel.enviado,
+  cancelado: orderStatusLabel.cancelado,
+}
+const fulfillmentItems: Record<string, string> = {
+  preparado: fulfillmentLabel.preparado,
+  sin_preparar: fulfillmentLabel.sin_preparar,
+  no_requerido: fulfillmentLabel.no_requerido,
+}
+const periodItems: Record<string, string> = {
+  hoy: "Hoy",
+  "7d": "Últimos 7 días",
+  "30d": "Últimos 30 días",
+  mes: "Este mes",
+}
+
+// Dialog para crear o editar un pedido. Se remonta por `key` para resetear.
+function OrderFormDialog({
+  open,
+  onOpenChange,
+  order,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  order: Order | null
+}) {
+  const isEdit = Boolean(order)
+  const [customer, setCustomer] = useState(order?.customer ?? "")
+  const [channel, setChannel] = useState(order?.channel ?? "Tienda en línea")
+  const [total, setTotal] = useState(order ? String(order.total) : "")
+  const [status, setStatus] = useState<string>(order?.status ?? "pendiente")
+  const [fulfillment, setFulfillment] = useState<string>(
+    order?.fulfillment ?? "sin_preparar"
+  )
+  const [saving, setSaving] = useState(false)
+
+  const submit = () => {
+    if (!customer.trim() || !total) {
+      toast.error("Captura el cliente y el total.")
+      return
+    }
+    setSaving(true)
+    setTimeout(() => {
+      setSaving(false)
+      onOpenChange(false)
+      toast.success(
+        isEdit
+          ? `Pedido ${order?.id} actualizado`
+          : `Pedido creado para ${customer}`
+      )
+    }, 700)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>
+            {isEdit ? `Editar pedido ${order?.id}` : "Crear pedido"}
+          </DialogTitle>
+          <DialogDescription>
+            {isEdit
+              ? "Actualiza los datos del pedido."
+              : "Captura un nuevo pedido manualmente."}
+          </DialogDescription>
+        </DialogHeader>
+        <FieldGroup>
+          <Field>
+            <FieldLabel htmlFor="o-customer">Cliente</FieldLabel>
+            <Input
+              id="o-customer"
+              placeholder="Nombre del cliente"
+              value={customer}
+              onChange={(e) => setCustomer(e.target.value)}
+            />
+          </Field>
+          <div className="grid grid-cols-2 gap-3">
+            <Field>
+              <FieldLabel>Canal</FieldLabel>
+              <Select
+                items={Object.fromEntries(channelOptions.map((c) => [c, c]))}
+                value={channel}
+                onValueChange={(v) => setChannel(v ?? "Tienda en línea")}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {channelOptions.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {c}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="o-total">Total</FieldLabel>
+              <InputGroup>
+                <InputGroupAddon>
+                  <InputGroupText>$</InputGroupText>
+                </InputGroupAddon>
+                <InputGroupInput
+                  id="o-total"
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={total}
+                  onChange={(e) => setTotal(e.target.value)}
+                />
+              </InputGroup>
+            </Field>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Field>
+              <FieldLabel>Estado del pago</FieldLabel>
+              <Select items={statusItems} value={status} onValueChange={(v) => setStatus(v ?? "pendiente")}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {Object.entries(statusItems).map(([v, label]) => (
+                      <SelectItem key={v} value={v}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field>
+              <FieldLabel>Preparación</FieldLabel>
+              <Select
+                items={fulfillmentItems}
+                value={fulfillment}
+                onValueChange={(v) => setFulfillment(v ?? "sin_preparar")}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {Object.entries(fulfillmentItems).map(([v, label]) => (
+                      <SelectItem key={v} value={v}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </Field>
+          </div>
+        </FieldGroup>
+        <DialogFooter>
+          <DialogClose render={<Button variant="outline" />}>Cancelar</DialogClose>
+          <Button onClick={submit} disabled={saving}>
+            {isEdit ? "Guardar cambios" : "Crear pedido"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 export function TablePage() {
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("todos")
+  const [channelFilter, setChannelFilter] = useState<Set<string>>(new Set())
+  const [fulfillmentFilter, setFulfillmentFilter] = useState<Set<FulfillmentStatus>>(
+    new Set()
+  )
+  const [period, setPeriod] = useState("hoy")
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(25)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [hiddenColumns, setHiddenColumns] = useState<Set<string>>(new Set())
+  const [orderDialog, setOrderDialog] = useState<{ open: boolean; order: Order | null }>(
+    { open: false, order: null }
+  )
+  const [importing, setImporting] = useState(false)
+
+  // Acción bloqueante: muestra el overlay de carga mientras "importa"
+  const importOrders = () => {
+    setImporting(true)
+    setTimeout(() => {
+      setImporting(false)
+      toast.success("Se importaron 24 pedidos")
+    }, 2200)
+  }
+
+  const activeFilters = channelFilter.size + fulfillmentFilter.size
+
+  const toggleChannel = (channel: string) => {
+    const next = new Set(channelFilter)
+    next.has(channel) ? next.delete(channel) : next.add(channel)
+    setChannelFilter(next)
+    setPage(1)
+  }
+  const toggleFulfillment = (value: FulfillmentStatus) => {
+    const next = new Set(fulfillmentFilter)
+    next.has(value) ? next.delete(value) : next.add(value)
+    setFulfillmentFilter(next)
+    setPage(1)
+  }
+  const clearFilters = () => {
+    setChannelFilter(new Set())
+    setFulfillmentFilter(new Set())
+    setPage(1)
+  }
 
   const visibleColumns = columns.filter((col) => !hiddenColumns.has(col.key))
 
@@ -183,9 +429,15 @@ export function TablePage() {
         order.id.includes(search)
       const matchesStatus =
         statusFilter === "todos" || order.status === statusFilter
-      return matchesSearch && matchesStatus
+      const matchesChannel =
+        channelFilter.size === 0 || channelFilter.has(order.channel)
+      const matchesFulfillment =
+        fulfillmentFilter.size === 0 || fulfillmentFilter.has(order.fulfillment)
+      return (
+        matchesSearch && matchesStatus && matchesChannel && matchesFulfillment
+      )
     })
-  }, [search, statusFilter])
+  }, [search, statusFilter, channelFilter, fulfillmentFilter])
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
   const currentPage = Math.min(page, totalPages)
@@ -232,7 +484,7 @@ export function TablePage() {
             <ChevronDown data-icon="inline-end" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem onClick={() => toast.info("Importando pedidos…")}>
+            <DropdownMenuItem onClick={importOrders}>
               <Upload />
               Importar pedidos
             </DropdownMenuItem>
@@ -255,7 +507,7 @@ export function TablePage() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button>
+        <Button onClick={() => setOrderDialog({ open: true, order: null })}>
           <Plus data-icon="inline-start" />
           Crear pedido
         </Button>
@@ -264,9 +516,29 @@ export function TablePage() {
       {/* Métricas del periodo (patrón Orders): card blanca segmentada con
           chip de fecha, indicadores con subrayado punteado y sparkline */}
       <Card className="flex-row items-stretch gap-0 py-0">
-        <div className="flex shrink-0 items-center gap-2 border-r px-5 text-sm">
-          <CalendarDays className="size-4 text-muted-foreground" />
-          Hoy
+        <div className="flex shrink-0 items-center border-r px-2">
+          <Select
+            items={periodItems}
+            value={period}
+            onValueChange={(v) => setPeriod(v ?? "hoy")}
+          >
+            <SelectTrigger
+              size="sm"
+              className="w-auto gap-1.5 border-0 bg-transparent font-medium text-foreground shadow-none focus-visible:ring-0 dark:bg-transparent"
+            >
+              <CalendarDays className="size-4 text-muted-foreground" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {Object.entries(periodItems).map(([v, label]) => (
+                  <SelectItem key={v} value={v}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
         {todayOrderMetrics.map((metric, index) => (
           <div
@@ -293,7 +565,7 @@ export function TablePage() {
                 {metric.value}
               </p>
             </div>
-            <Sparkline data={metric.spark} className="hidden xl:block" />
+            <Sparkline data={metric.spark} interactive className="hidden xl:block" />
           </div>
         ))}
       </Card>
@@ -340,6 +612,83 @@ export function TablePage() {
                 setPage(1)
               }}
             />
+          </div>
+          {/* Filtros de la tabla (canal + preparación) */}
+          <div className="flex items-center border-l px-1.5">
+            <Popover>
+              <PopoverTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-label="Filtrar"
+                    className="relative"
+                  />
+                }
+              >
+                <ListFilter />
+                {activeFilters > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
+                    {activeFilters}
+                  </span>
+                )}
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-64 p-0">
+                <div className="flex items-center justify-between px-3 py-2">
+                  <span className="text-sm font-medium">Filtros</span>
+                  {activeFilters > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="xs"
+                      className="text-muted-foreground"
+                      onClick={clearFilters}
+                    >
+                      <X data-icon="inline-start" />
+                      Limpiar
+                    </Button>
+                  )}
+                </div>
+                <div className="max-h-80 space-y-4 overflow-y-auto p-3">
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Canal
+                    </p>
+                    {channelOptions.map((channel) => (
+                      <label
+                        key={channel}
+                        className="flex cursor-pointer items-center gap-2 text-sm"
+                      >
+                        <Checkbox
+                          checked={channelFilter.has(channel)}
+                          onCheckedChange={() => toggleChannel(channel)}
+                        />
+                        {channel}
+                      </label>
+                    ))}
+                  </div>
+                  <Separator />
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Preparación
+                    </p>
+                    {(
+                      Object.keys(fulfillmentItems) as FulfillmentStatus[]
+                    ).map((value) => (
+                      <label
+                        key={value}
+                        className="flex cursor-pointer items-center gap-2 text-sm"
+                      >
+                        <Checkbox
+                          checked={fulfillmentFilter.has(value)}
+                          onCheckedChange={() => toggleFulfillment(value)}
+                        />
+                        {fulfillmentItems[value]}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
           {/* Selector de columnas visibles */}
           <div className="flex items-center border-l px-1.5">
@@ -445,7 +794,7 @@ export function TablePage() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem
-                          onClick={() => toast.info(`Editando ${order.id}`)}
+                          onClick={() => setOrderDialog({ open: true, order })}
                         >
                           <Pencil />
                           Editar
@@ -561,6 +910,19 @@ export function TablePage() {
           </div>
         </div>
       </Card>
+
+      {/* Overlay de carga a pantalla completa para acciones bloqueantes */}
+      <LoadingOverlay open={importing} label="Importando pedidos…" />
+
+      {/* Dialog de crear / editar pedido (remontado por key para resetear) */}
+      <OrderFormDialog
+        key={orderDialog.order?.id ?? "nuevo"}
+        open={orderDialog.open}
+        order={orderDialog.order}
+        onOpenChange={(open) =>
+          setOrderDialog((prev) => ({ ...prev, open }))
+        }
+      />
     </>
   )
 }

@@ -270,7 +270,7 @@ export function DashboardPage() {
                 <span className="align-middle text-muted-foreground">—</span>
               </p>
             </div>
-            <Sparkline data={kpi.spark} className="hidden lg:block" />
+            <Sparkline data={kpi.spark} interactive className="hidden lg:block" />
           </Card>
         ))}
       </div>

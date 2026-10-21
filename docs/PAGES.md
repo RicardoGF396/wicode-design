@@ -75,6 +75,14 @@ paginación, siempre visibles sin scroll de página.
   tabular-nums`, menú `MoreHorizontal` al final.
 - Filtros: estado en `useState` + `useMemo`; `setPage(1)` al cambiar filtro.
   Nunca tabs para estados: siempre el select dentro de la barra de búsqueda.
+  Junto al botón de columnas va un botón de filtro (icono `ListFilter`) que
+  abre un `Popover` con paneles de checkboxes (canal, preparación…) y un badge
+  con el número de filtros activos.
+- Métricas: el chip de fecha es un `Select` de periodo (Hoy/7/30 días/mes) y
+  las sparklines son `interactive` (muestran el valor al hacer hover).
+- Crear/editar: la primaria y la acción "Editar" de la fila abren un `Dialog`
+  con el formulario del registro (remontado por `key` para resetear); al
+  guardar, `toast` de confirmación.
 - Estilo de tabla: `data-table` (filas blancas con divisores finos, sin
   zebra ni líneas verticales), ver DESIGN_RULES §8.
 - Filas canceladas/archivadas: atributo `data-cancelled` en el `TableRow`

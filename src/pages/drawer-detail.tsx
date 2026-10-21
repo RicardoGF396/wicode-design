@@ -269,7 +269,7 @@ export function DrawerDetailPage() {
               </Tooltip>
               <p className="text-sm font-medium tabular-nums">{metric.value}</p>
             </div>
-            <Sparkline data={metric.spark} className="hidden xl:block" />
+            <Sparkline data={metric.spark} interactive className="hidden xl:block" />
           </div>
         ))}
       </Card>
